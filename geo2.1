@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ממלכת הגיאומטריה של גלי - גרסה 6.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body { font-family: 'Assistant', sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); overflow-x: hidden; touch-action: manipulation; }
+        
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; appearance: none; }
+
+        /* The specific squares on the perimeter of the shape */
+        .side-input-btn { width: 44px; height: 44px; text-align: center; font-size: 24px; border: 3px solid #94a3b8; border-bottom-width: 5px; border-radius: 12px; background: white; font-weight: 900; cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 6px rgba(0,0,0,0.15); color: #334155; display: flex; align-items: center; justify-content: center; }
+        .side-input-btn:active { transform: translateY(3px); border-bottom-width: 2px; }
+        .side-input-btn:hover { border-color: #3b82f6; color: #2563eb; background: #eff6ff;}
+        
+        .btn-3d { border-bottom-width: 6px; transition: all 0.1s; position: relative; top: 0; }
+        .btn-3d:active { border-bottom-width: 2px; top: 4px; }
+
+        /* Divider lines styles */
+        .divider-line { stroke: #f97316; stroke-width: 3; stroke-dasharray: 8 8; cursor: pointer; transition: all 0.3s; opacity: 0.6; }
+        .divider-line:hover { opacity: 1; stroke-width: 5; stroke: #ea580c; }
+        .divider-active { stroke-dasharray: 0; opacity: 1 !important; stroke: #ea580c; stroke-width: 5; z-index: 10; }
+        
+        /* Perimeter Labels - clearly separated from the lines */
+        .side-label { position: absolute; transform: translate(-50%, -50%); z-index: 20; pointer-events: auto; display: flex; align-items: center; justify-content: center; }
+        .val-display { background: rgba(255, 255, 255, 0.95); border: 3px solid #cbd5e1; border-bottom-width: 5px; padding: 0 12px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-weight: 900; color: #1e293b; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-size: 22px; cursor: default; }
+
+        /* Highlight Classes */
+        .highlight-parallel { box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.6) !important; border-color: #ec4899 !important; background-color: #fce7f3 !important; color: #be185d !important; transform: scale(1.1); z-index: 40 !important; transition: all 0.3s ease; }
+
+        /* Popup Calculator Bubble - Big, white, LTR direction */
+        .add-helper { position: absolute; background: #fff; border: 4px solid #3b82f6; border-radius: 20px; padding: 12px 16px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); z-index: 200; white-space: nowrap; width: max-content; max-width: 90vw; flex-direction: row; }
+        
+        .add-helper input.total-v { width: 56px; height: 56px; border: 3px solid #60a5fa; background: #eff6ff; border-radius: 12px; text-align: center; font-weight: 900; outline: none; font-size: 24px; color: #1e3a8a; transition: transform 0.2s; margin-left: 4px; }
+        .add-helper input.total-v:focus { border-color: #2563eb; background: white; transform: scale(1.05); }
+        
+        /* Animations */
+        .helper-top { bottom: 100%; left: 50%; transform: translate(-50%, -15px); animation: popInTop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .helper-bottom { top: 100%; left: 50%; transform: translate(-50%, 15px); animation: popInBottom 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .helper-left { right: 100%; top: 50%; transform: translate(-15px, -50%); animation: popInLeft 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .helper-right { left: 100%; top: 50%; transform: translate(15px, -50%); animation: popInRight 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        
+        @keyframes popInTop { from { transform: translate(-50%, 0) scale(0.5); opacity: 0; } to { transform: translate(-50%, -15px) scale(1); opacity: 1; } }
+        @keyframes popInBottom { from { transform: translate(-50%, 0) scale(0.5); opacity: 0; } to { transform: translate(-50%, 15px) scale(1); opacity: 1; } }
+        @keyframes popInLeft { from { transform: translate(0, -50%) scale(0.5); opacity: 0; } to { transform: translate(-15px, -50%) scale(1); opacity: 1; } }
+        @keyframes popInRight { from { transform: translate(0, -50%) scale(0.5); opacity: 0; } to { transform: translate(15px, -50%) scale(1); opacity: 1; } }
+
+        .progress-bar-inner { transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        #welcome-modal, #success-modal, #report-modal, #library-modal, #instructions-modal, #buyout-modal { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); z-index: 400; }
+        
+        .walk-inp-style { width: 60px; height: 36px; border: 2px solid #818cf8; border-bottom-width: 4px; border-radius: 8px; text-align: center; font-weight: 800; outline: none; color: #1e3a8a; margin: 0 4px; font-size: 16px; transition: all 0.1s;}
+        .walk-btn-style { background: #4f46e5; color: white; border-radius: 8px; border-bottom: 4px solid #3730a3; padding: 0 12px; height: 36px; font-weight: bold; margin-right: 4px; cursor: pointer; font-size: 15px; transition: all 0.1s;}
+        .walk-btn-style:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+        .perimeter-box { width: 42px; height: 42px; border: 2.5px solid #3b82f6; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; background: #eff6ff; color: #1e40af; animation: popIn 0.3s ease-out; font-size: 18px; box-shadow: 0 4px 6px rgba(59,130,246,0.2); }
+        @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .scratchpad { position: fixed; bottom: 20px; left: 20px; z-index: 150; display: flex; flex-direction: column; align-items: flex-start; }
+        .close-x { position: absolute; top: -14px; left: -14px; width: 32px; height: 32px; background: #ef4444; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; border: 3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 110; transition: transform 0.2s; font-size: 16px; }
+        .close-x:hover { background: #dc2626; transform: scale(1.1); }
+        
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .shake-err { animation: shake 0.3s ease-in-out; border-color: #ef4444 !important; background-color: #fee2e2 !important; }
+
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        
+        .diff-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .diff-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+
+        #knight-walker { text-shadow: 0 4px 6px rgba(0,0,0,0.3); filter: drop-shadow(0 8px 8px rgba(0,0,0,0.3)); z-index: 100; }
+        #knight-bubble { max-width: 280px; white-space: normal; break-inside: avoid; }
+        
+        .panel-3d { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255,255,255,0.8); }
+
+        @keyframes coinBounce { 0% { transform: scale(1); } 50% { transform: scale(1.3) rotate(15deg); } 100% { transform: scale(1) rotate(0deg); } }
+        .coin-anim { animation: coinBounce 0.4s ease-out; }
+        
+        @keyframes floatAnim { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-15px) rotate(2deg); } 100% { transform: translateY(0px) rotate(0deg); } }
+        .float-obj { animation: floatAnim 6s ease-in-out infinite; }
+        .float-obj-slow { animation: floatAnim 10s ease-in-out infinite reverse; }
+
+        .area-start-btn { animation: pulseBtn 2s infinite; }
+        @keyframes pulseBtn { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-3 md:p-4 relative">
+
+    <div class="fixed bottom-3 left-3 text-white text-xs font-black z-50 pointer-events-none bg-blue-600 px-3 py-2 rounded-xl shadow-lg border-2 border-white">
+        גרסה 6.0 - משוואות מושלמות והריבועים חזרו! 🧮
+    </div>
+
+    <!-- Global SVGs -->
+    <svg width="0" height="0" class="hidden">
+        <symbol id="icon-coin" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" fill="#FBBF24" stroke="#B45309" stroke-width="2"/>
+            <path d="M12 6V18M8 10H16M8 14H16" stroke="#B45309" stroke-width="2" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="icon-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18h6 M10 22h4 M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.53.9 2.7 1.5 3.5.75.76 1.22 1.52 1.41 2.5"/>
+        </symbol>
+    </svg>
+
+    <!-- Welcome Modal -->
+    <div id="welcome-modal" class="fixed inset-0 flex items-center justify-center p-4 z-[500]">
+        <div class="bg-white rounded-[3.5rem] p-8 md:p-10 max-w-2xl w-full shadow-2xl border-b-[14px] border-blue-600 relative text-right overflow-y-auto max-h-[95vh]">
+            <div class="absolute -top-10 -right-10 w-48 h-48 bg-blue-50 rounded-full opacity-50"></div>
+            <div class="text-7xl mb-4 text-center animate-bounce">🏰</div>
+            <h2 class="text-4xl md:text-5xl font-black text-slate-800 mb-2 font-['Varela_Round'] text-center">ממלכת הגיאומטריה של גלי</h2>
+            <p class="text-slate-500 mb-8 font-bold text-center text-xl">הכינו את הציוד, יוצאים למסע תלת-ממדי!</p>
+            
+            <div class="space-y-6 relative z-10">
+                <div class="bg-blue-50 p-5 rounded-3xl border-2 border-blue-100 shadow-sm panel-3d">
+                    <label class="block text-sm font-black text-blue-900 mb-2 uppercase tracking-wide">איך נקרא לך, גיבור/ה?</label>
+                    <input type="text" id="player-name-input" class="w-full p-4 border-2 border-white rounded-2xl text-xl font-bold outline-none focus:ring-4 ring-blue-200 transition shadow-inner" placeholder="הקלידו שם כאן..." onkeydown="if(event.key==='Enter') document.getElementById('start-game-btn').click()">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-purple-50 p-5 rounded-3xl border-2 border-purple-100 shadow-sm panel-3d">
+                        <label class="block text-sm font-black text-purple-900 mb-2">בחירת עולם:</label>
+                        <select id="story-select" class="w-full p-3 border-2 border-white rounded-2xl text-lg font-bold outline-none focus:ring-4 ring-purple-200 bg-white cursor-pointer shadow-sm">
+                            <option value="class42" selected>🎒 משימת כיתה ד'2</option>
+                            <option value="singers">🎤 עולם הזמרות של גלי</option>
+                            <option value="brawl">🌵 זירת הבראולרים</option>
+                            <option value="blocks">⛏️ עולם הבלוקים</option>
+                            <option value="aliens">🛸 פלישת החייזרים</option>
+                            <option value="cyber">🤖 עיר העתיד</option>
+                            <option value="pirates">🏴‍☠️ אי הפיראטים</option>
+                            <option value="forest">🧝‍♂️ יער הקסמים</option>
+                            <option value="ocean">🧜‍♀️ ממלכת אטלנטיס</option>
+                            <option value="ninja">🥷 כפר הנינג'ות</option>
+                            <option value="dino">🦖 פארק הדינוזאורים</option>
+                        </select>
+                    </div>
+                    <div class="bg-emerald-50 p-5 rounded-3xl border-2 border-emerald-100 shadow-sm panel-3d">
+                        <label class="block text-sm font-black text-emerald-900 mb-2">כמות שלבים:</label>
+                        <select id="levels-select" class="w-full p-3 border-2 border-white rounded-2xl text-lg font-bold bg-white cursor-pointer shadow-sm">
+                            <option value="3">3 שלבים</option>
+                            <option value="5">5 שלבים</option>
+                            <option value="6" selected>6 שלבים (המסע המלא!)</option>
+                            <option value="10">10 שלבים</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bg-amber-50 p-5 rounded-3xl border-2 border-amber-100 shadow-sm panel-3d">
+                    <label class="block text-sm font-black text-amber-900 mb-3">רמת הקושי:</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="setDiff(1, this)" class="diff-btn p-3 rounded-2xl border-2 border-white bg-white font-bold hover:bg-emerald-100 transition shadow-sm border-b-4 border-slate-200">🟢 קלה</button>
+                        <button onclick="setDiff(2, this)" id="default-diff" class="diff-btn p-3 rounded-2xl border-2 border-white bg-white font-bold hover:bg-amber-100 transition shadow-sm ring-4 ring-amber-400 border-b-4 border-slate-200">🟡 בינונית</button>
+                        <button onclick="setDiff(3, this)" class="diff-btn p-3 rounded-2xl border-2 border-white bg-white font-bold hover:bg-rose-100 transition shadow-sm border-b-4 border-slate-200">🔴 אלופים!</button>
+                    </div>
+                </div>
+                <details class="group bg-slate-50 border-2 border-slate-200 rounded-2xl overflow-hidden transition-all duration-300 panel-3d">
+                    <summary class="flex justify-between items-center font-black cursor-pointer p-4 text-slate-700 hover:text-slate-900 bg-white">
+                        <span class="transition-transform duration-300 group-open:rotate-180">▼</span>
+                        <span>➕ בחירת סוגי צורות למסע</span>
+                    </summary>
+                    <div class="p-4 grid grid-cols-1 gap-3 bg-slate-50 border-t-2 border-slate-200">
+                        <label class="flex items-center justify-between p-3 bg-white border-2 border-blue-400 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-comp" checked class="w-6 h-6"><span class="font-black text-blue-900">צורות מורכבות (L, U, צלב, מדרגות)</span></label>
+                        <label class="flex items-center justify-between p-3 bg-white border-2 border-slate-200 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-simple" class="w-6 h-6"><span class="font-bold text-slate-700">מלבנים וריבועים פשוטים</span></label>
+                        <label class="flex items-center justify-between p-3 bg-white border-2 border-slate-200 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-triangles" class="w-6 h-6"><span class="font-bold text-slate-700">משולשים (ישר זווית, שווה צלעות)</span></label>
+                        <label class="flex items-center justify-between p-3 bg-white border-2 border-slate-200 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-quads" class="w-6 h-6"><span class="font-bold text-slate-700">מרובעים מיוחדים (טרפז, מעוין, מקבילית, דלתון)</span></label>
+                    </div>
+                </details>
+            </div>
+            <button id="start-game-btn" class="btn-3d w-full mt-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-5 rounded-[2rem] text-2xl font-black shadow-xl border-blue-800">מתחילים בהרפתקה! ➔</button>
+        </div>
+    </div>
+
+    <!-- Instructions Modal -->
+    <div id="instructions-modal" class="hidden fixed inset-0 flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-sm z-[250]">
+        <div class="bg-white rounded-[2.5rem] p-6 max-w-4xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto border-4 border-amber-400 text-right">
+            <button onclick="document.getElementById('instructions-modal').classList.add('hidden')" class="absolute top-4 left-4 text-3xl text-slate-400 hover:text-slate-800 font-bold bg-slate-100 w-12 h-12 rounded-full flex items-center justify-center btn-3d border-slate-300">✕</button>
+            <h2 class="text-4xl md:text-5xl font-black text-amber-800 mb-6 text-center font-['Varela_Round'] mt-2">🏰 מדריך לשחקן</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-indigo-50 p-5 rounded-2xl border-2 border-indigo-200 panel-3d md:col-span-2">
+                    <p class="text-lg text-indigo-900 font-bold">תלמידים יקרים, היום אנחנו יוצאים למסע בממלכת הגיאומטריה התלת-ממדית של גלי!<br>בכל שלב נצטרך לעזור לדמויות לבנות ולתכנן מבנים דרך חישובי <strong class="text-indigo-700">היקף</strong> ו<strong class="text-indigo-700">שטח</strong>.</p>
+                </div>
+                <div class="bg-blue-50 p-5 rounded-2xl border-2 border-blue-200 panel-3d">
+                    <h3 class="text-2xl font-black text-blue-800 mb-3 flex items-center gap-2">🚶‍♂️ 1. טיול ההיקף</h3>
+                    <p class="text-base text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-blue-100 h-full">כדי למצוא היקף, יוצאים ל"טיול" מסביב לצורה. לחצו על כפתור "טיול היקף" והדמות תאסוף את המספרים.<br><strong class="text-rose-600 block mt-2">שימו לב!</strong> לפעמים חסרות צלעות (<code>?</code>). לא תוכלו לצאת לטיול לפני שגיליתם אותן (לחצו על ה-<code>?</code>).</p>
+                </div>
+                <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-200 panel-3d">
+                    <h3 class="text-2xl font-black text-emerald-800 mb-3 flex items-center gap-2">🟩 2. חישוב שטח מלבן</h3>
+                    <p class="text-base text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-emerald-100 h-full">כדי למצוא שטח, לוחצים על הלחצן "🔍 שטח מלבן" בתוך הצורה. ייפתח חלון קטן בו תוכלו להקליד את שטח המלבן שחישבתם.</p>
+                </div>
+                <div class="bg-orange-50 p-5 rounded-2xl border-2 border-orange-200 panel-3d md:col-span-2">
+                    <h3 class="text-2xl font-black text-orange-800 mb-3 flex items-center gap-2">✂️ 3. קווי החלוקה הכתומים</h3>
+                    <p class="text-base text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-orange-100 h-full">בצורות מורכבות תראו <strong>קווים כתומים מקווקווים</strong>. אתם חייבים <strong>ללחוץ על אחד מהקווים</strong> כדי לחתוך את הצורה למלבנים!</p>
+                </div>
+                <div class="bg-amber-50 p-5 rounded-2xl border-2 border-amber-200 panel-3d md:col-span-2">
+                    <h3 class="text-2xl font-black text-amber-800 mb-3 flex items-center gap-2"><svg class="w-8 h-8 text-amber-500 inline mr-2"><use href="#icon-coin"></use></svg> 4. כלכלת המטבעות</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-amber-100">
+                            <p class="font-black text-green-600 mb-2 text-lg">איך מרוויחים?</p>
+                            <ul class="list-disc list-inside text-slate-700 space-y-1 font-bold">
+                                <li>תשובה נכונה של צלע / שטח = מטבעות <svg class="w-4 h-4 inline text-amber-500"><use href="#icon-coin"></use></svg></li>
+                                <li>שטח והיקף סופיים נכונים = הרים של מטבעות <svg class="w-4 h-4 inline text-amber-500"><use href="#icon-coin"></use></svg></li>
+                                <li>סיום שלב בהצלחה = בונוס ענק! 🏆</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-amber-100">
+                            <p class="font-black text-rose-600 mb-2 text-lg">איך מבזבזים (כשנתקעים)?</p>
+                            <ul class="list-disc list-inside text-slate-700 space-y-1 font-bold">
+                                <li><strong>עזרה מלאה (<svg class="w-4 h-4 inline text-amber-500"><use href="#icon-bulb"></use></svg>):</strong> 10 <svg class="w-4 h-4 inline text-amber-500"><use href="#icon-coin"></use></svg></li>
+                                <li><strong>דילוג המתנה:</strong> 20 <svg class="w-4 h-4 inline text-amber-500"><use href="#icon-coin"></use></svg></li>
+                                <li><strong>לחיצה על ריבוע קטן (בתוך המשוואה):</strong> 2 <svg class="w-4 h-4 inline text-amber-500"><use href="#icon-coin"></use></svg></li>
+                                <li><strong>שרביט שטח קסום:</strong> 5 <svg class="w-4 h-4 inline text-amber-500"><use href="#icon-coin"></use></svg></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="document.getElementById('instructions-modal').classList.add('hidden')" class="w-full mt-6 bg-slate-800 hover:bg-slate-900 text-white py-4 rounded-2xl text-xl font-black shadow-lg btn-3d border-b-4 border-slate-950">הבנתי, אני מוכן לשחק! 🎮</button>
+        </div>
+    </div>
+
+    <!-- Shape Library Modal -->
+    <div id="library-modal" class="hidden fixed inset-0 flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-sm z-[250]">
+        <div class="bg-white rounded-[2.5rem] p-6 max-w-4xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto border-4 border-indigo-400 text-right">
+            <button onclick="document.getElementById('library-modal').classList.add('hidden')" class="absolute top-4 left-4 text-3xl text-slate-400 hover:text-slate-800 font-bold bg-slate-100 w-12 h-12 rounded-full flex items-center justify-center btn-3d border-slate-300">✕</button>
+            <h2 class="text-4xl font-black text-indigo-800 mb-6 text-center font-['Varela_Round'] mt-2">📚 דף הנוסחאות המלא</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-blue-50 p-5 rounded-2xl border-2 border-blue-200 panel-3d md:col-span-2">
+                    <h3 class="text-2xl font-black text-blue-800 mb-3 flex items-center gap-2"><span class="text-3xl">📐</span> היקף לכל הצורות</h3>
+                    <p class="text-slate-700 mb-2 text-lg"><strong>היקף = סכום כל הצלעות החיצוניות של הצורה.</strong> פשוט מקיפים את הצורה ומחברים את האורכים.</p>
+                </div>
+                <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-200 panel-3d">
+                    <h3 class="text-xl font-black text-emerald-800 mb-3 flex items-center gap-2"><span class="text-2xl">🟩</span> מלבן וריבוע</h3>
+                    <p class="text-slate-700 mb-2 text-lg"><strong>שטח = אורך × רוחב</strong></p>
+                </div>
+                <div class="bg-cyan-50 p-5 rounded-2xl border-2 border-cyan-200 panel-3d">
+                    <h3 class="text-xl font-black text-cyan-800 mb-3 flex items-center gap-2"><span class="text-2xl">🔺</span> משולש</h3>
+                    <p class="text-slate-700 mb-2 text-lg"><strong>שטח = (בסיס × גובה) ÷ 2</strong></p>
+                </div>
+                <div class="bg-amber-50 p-5 rounded-2xl border-2 border-amber-200 panel-3d">
+                    <h3 class="text-xl font-black text-amber-800 mb-3 flex items-center gap-2"><span class="text-2xl">▱</span> מקבילית</h3>
+                    <p class="text-slate-700 mb-2 text-lg"><strong>שטח = צלע (בסיס) × גובה</strong></p>
+                </div>
+                <div class="bg-orange-50 p-5 rounded-2xl border-2 border-orange-200 panel-3d">
+                    <h3 class="text-xl font-black text-orange-800 mb-3 flex items-center gap-2"><span class="text-2xl">⏢</span> טרפז</h3>
+                    <p class="text-slate-700 mb-2 text-lg"><strong>שטח = [(בסיס1 + בסיס2) × גובה] ÷ 2</strong></p>
+                </div>
+                <div class="bg-purple-50 p-5 rounded-2xl border-2 border-purple-200 panel-3d md:col-span-2">
+                    <h3 class="text-xl font-black text-purple-800 mb-3 flex items-center gap-2"><span class="text-2xl">💠</span> מעוין ודלתון</h3>
+                    <p class="text-slate-700 mb-2 text-lg"><strong>שטח = (אלכסון1 × אלכסון2) ÷ 2</strong></p>
+                </div>
+            </div>
+            <button onclick="document.getElementById('library-modal').classList.add('hidden')" class="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl text-lg font-black shadow-md btn-3d">סגור חלון</button>
+        </div>
+    </div>
+
+    <!-- Buyout Modal -->
+    <div id="buyout-modal" class="hidden fixed inset-0 flex items-center justify-center p-4 z-[400]">
+        <div class="bg-white rounded-[2rem] p-6 max-w-sm w-full shadow-2xl text-center border-4 border-blue-500 panel-3d relative">
+            <button onclick="document.getElementById('buyout-modal').classList.add('hidden')" class="absolute top-2 left-2 text-xl text-slate-400 hover:text-slate-800 font-bold w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">✕</button>
+            <div class="text-5xl mb-4">⏳</div>
+            <h3 class="text-2xl font-black text-slate-800 mb-2">דילוג על המתנה?</h3>
+            <p class="text-slate-600 mb-6 font-bold">העזרה נחה כרגע. האם תרצו לשלם <strong class="text-amber-500">20 מטבעות</strong> כדי להעיר אותה מיד?</p>
+            <div class="flex gap-3 justify-center">
+                <button onclick="document.getElementById('buyout-modal').classList.add('hidden')" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl btn-3d">לא תודה</button>
+                <button onclick="buyoutCooldown()" class="px-4 py-2 bg-amber-500 text-white font-black rounded-xl btn-3d border-b-4 border-amber-700 flex items-center gap-2">שלם 20 <svg class="w-5 h-5"><use href="#icon-coin"></use></svg></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scratchpad Area -->
+    <div class="scratchpad hidden" id="scratchpad">
+        <div id="scratch-box" class="hidden mb-2 bg-[#fffbeb] border-4 border-amber-400 rounded-2xl w-[280px] h-[340px] p-3 shadow-2xl flex flex-col gap-2 font-['Assistant']">
+            <h4 class="font-black text-amber-800 text-center border-b-2 border-amber-200 pb-1">📝 דף טיוטה וחישובים</h4>
+            <div class="flex flex-col flex-1 gap-1">
+                <label class="text-xs font-bold text-amber-700">חישוב צלעות חסרות:</label>
+                <textarea class="flex-1 w-full bg-white/50 border border-amber-200 rounded p-1 text-sm outline-none resize-none focus:bg-white focus:border-amber-400 transition" placeholder="למשל: 5 + 3 = 8"></textarea>
+            </div>
+            <div class="flex flex-col flex-1 gap-1">
+                <label class="text-xs font-bold text-amber-700">חישוב שטחים (כפל):</label>
+                <textarea class="flex-1 w-full bg-white/50 border border-amber-200 rounded p-1 text-sm outline-none resize-none focus:bg-white focus:border-amber-400 transition" placeholder="למשל: 4 × 5 = 20"></textarea>
+            </div>
+            <div class="flex flex-col flex-1 gap-1">
+                <label class="text-xs font-bold text-amber-700">חישוב היקף סופי (חיבור):</label>
+                <textarea class="flex-1 w-full bg-white/50 border border-amber-200 rounded p-1 text-sm outline-none resize-none focus:bg-white focus:border-amber-400 transition" placeholder="למשל: 10+10+5+5 = 30"></textarea>
+            </div>
+        </div>
+        <button onclick="toggleScratch()" class="bg-amber-500 hover:bg-amber-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center font-black text-2xl transition btn-3d border-amber-700">📝</button>
+    </div>
+
+    <!-- Main Game UI -->
+    <header class="w-full max-w-7xl flex flex-col md:flex-row items-center justify-between gap-4 mb-4 bg-white p-3 md:p-5 rounded-[2.5rem] panel-3d border border-slate-200 relative z-30">
+        <div class="flex items-center gap-4 w-full md:w-auto">
+            <div class="bg-blue-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0 border-b-4 border-blue-800">
+                <span id="level-num">1</span>
+            </div>
+            <div class="flex-1 flex flex-col items-start">
+                <h1 class="text-xl md:text-2xl font-black text-slate-800 truncate">ממלכת הגיאומטריה של גלי</h1>
+                <div class="text-sm font-bold text-slate-500 mt-1">הגיבור/ה: <span id="player-name-display" class="text-blue-600 underline">התלמיד/ה</span></div>
+                <div id="stars-row" class="flex text-xl text-slate-200 mt-1 justify-start drop-shadow-sm"></div>
+            </div>
+        </div>
+        <div class="flex-1 w-full md:max-w-sm px-2 md:px-0">
+            <div class="flex justify-between text-xs font-bold text-slate-400 uppercase mb-2">
+                <span id="progress-text">שלב 1 מתוך 5</span>
+                <span>התקדמות</span>
+            </div>
+            <div class="h-4 bg-slate-100 rounded-full overflow-hidden border border-slate-200 shadow-inner">
+                <div id="progress-bar" class="progress-bar-inner h-full bg-gradient-to-r from-blue-400 to-blue-600 w-0"></div>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 md:gap-3 justify-center w-full md:w-auto mt-2 md:mt-0 flex-wrap">
+            <button id="mute-btn" class="flex flex-col items-center justify-center bg-slate-100 border-2 border-slate-200 hover:bg-slate-200 rounded-xl px-3 py-2 transition hover:scale-105 btn-3d shadow-sm" title="השתק/הפעל צלילים">
+                <span class="text-2xl mb-1" id="mute-icon">🔊</span>
+                <span class="text-[10px] md:text-xs font-bold text-slate-500">צליל</span>
+            </button>
+            <div id="coins-display" class="flex items-center justify-center bg-amber-50 border-2 border-amber-300 rounded-xl px-4 py-2 font-black text-amber-600 text-xl shadow-sm transition-transform gap-1">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="drop-shadow-sm"><circle cx="12" cy="12" r="10" fill="#FBBF24" stroke="#B45309" stroke-width="2"/><path d="M12 6V18M8 10H16M8 14H16" stroke="#B45309" stroke-width="2" stroke-linecap="round"/></svg>
+                <span id="coins-amount" class="ml-1">0</span>
+            </div>
+            <button id="toggle-help-btn" class="flex flex-col items-center justify-center bg-slate-50 border-2 border-slate-200 hover:bg-white rounded-xl px-3 md:px-4 py-2 transition relative group btn-3d shadow-sm min-w-[70px]">
+                <span class="text-2xl mb-1 group-hover:scale-110 transition" id="help-icon-span">💡</span>
+                <span class="text-[10px] md:text-xs font-bold text-slate-500" id="help-text-span">עזרה (חינם)</span>
+                <span id="help-indicator" class="hidden absolute top-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse transform translate-x-1/3 -translate-y-1/3 shadow-md"></span>
+            </button>
+            <button onclick="document.getElementById('library-modal').classList.remove('hidden')" class="flex flex-col items-center justify-center bg-slate-50 border-2 border-slate-200 hover:bg-white rounded-xl px-3 md:px-4 py-2 transition hover:scale-105 btn-3d shadow-sm">
+                <span class="text-2xl mb-1">📚</span>
+                <span class="text-[10px] md:text-xs font-bold text-slate-500">נוסחאות</span>
+            </button>
+            <button onclick="document.getElementById('instructions-modal').classList.remove('hidden')" class="flex flex-col items-center justify-center bg-orange-50 border-2 border-orange-200 hover:bg-white rounded-xl px-3 md:px-4 py-2 transition hover:scale-105 btn-3d shadow-sm">
+                <span class="text-2xl mb-1">📖</span>
+                <span class="text-[10px] md:text-xs font-bold text-orange-700">איך לשחק?</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="w-full max-w-7xl flex flex-col gap-6 relative z-10">
+        <!-- Story Panel -->
+        <div id="story-panel" class="w-full p-6 rounded-[2.5rem] border relative overflow-hidden transition-colors duration-500 text-right panel-3d">
+            <div id="story-blob" class="absolute top-0 right-0 w-40 h-40 rounded-full -mr-20 -mt-20 opacity-30 transition-colors duration-500"></div>
+            <div class="relative z-10">
+                <h3 id="story-title" class="text-2xl font-black mb-2 flex items-center gap-3 justify-start w-fit">
+                    <span id="story-title-text">המשימה...</span> <span id="story-char" class="text-4xl drop-shadow-md">🎮</span> 
+                </h3>
+                <p id="story-desc" class="font-bold text-lg leading-relaxed transition-colors duration-500 max-w-4xl text-slate-700">טוען...</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Game Canvas -->
+            <div id="game-main" class="lg:col-span-7 bg-white p-4 rounded-[2.5rem] border border-slate-200 relative text-right flex flex-col panel-3d">
+                <div id="canvas-container" class="w-full aspect-[6/5] min-h-[400px] border-4 border-slate-200 rounded-[2rem] relative bg-slate-50 shadow-inner overflow-hidden" dir="ltr">
+                    <svg id="game-svg" viewBox="0 0 600 500" class="w-full h-full preserve-aspect-ratio overflow-visible"></svg>
+                    <div id="interactive-overlay" class="absolute inset-0 pointer-events-none rounded-[2rem]"></div>
+                    <div id="knight-walker" class="hidden absolute text-4xl transition-all duration-1000 ease-linear pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-[150]">
+                        <div id="knight-bubble" class="mb-2 bg-white border-4 border-indigo-500 rounded-2xl px-4 py-3 text-base font-black shadow-2xl text-indigo-900 leading-tight text-center transition-opacity duration-300 panel-3d" dir="rtl"></div>
+                        <span id="walker-char" class="pointer-events-none drop-shadow-lg">🚶‍♂️</span>
+                    </div>
+                </div>
+                <div id="status-msg" class="hidden w-full p-4 mt-4 rounded-2xl font-black border-2 text-center transition-all duration-300 text-lg shadow-sm panel-3d"></div>
+            </div>
+
+            <!-- Calculation Panels -->
+            <div class="lg:col-span-5 flex flex-col gap-6 text-right">
+                <!-- Perimeter Area -->
+                <div class="bg-white p-6 rounded-[2.5rem] border border-blue-100 relative overflow-hidden panel-3d">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-black text-blue-900 flex items-center gap-2">
+                            <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm shadow-md border-b-2 border-blue-800">1</span>
+                            היקף הצורה
+                        </h3>
+                        <button id="walk-btn" onclick="startWalk('perimeter')" class="text-sm bg-indigo-50 text-indigo-800 hover:bg-indigo-100 border-2 border-indigo-200 px-4 py-2 rounded-xl flex items-center gap-2 shadow-sm font-black transition btn-3d">
+                            <span id="btn-char-p">🚶‍♂️</span> טיול היקף
+                        </button>
+                    </div>
+                    <div id="p-inputs" class="flex flex-wrap items-center gap-2 mb-4 p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 min-h-[5.5rem] shadow-inner" dir="ltr">
+                        <div class="text-slate-400 text-sm font-bold w-full text-right mb-2" dir="rtl">מספרים שייאספו בטיול:</div>
+                    </div>
+                    <div class="flex items-center justify-between bg-blue-600 text-white p-5 rounded-2xl shadow-md border-b-4 border-blue-800">
+                        <span class="font-black text-xl">סה"כ היקף:</span>
+                        <div class="flex items-center gap-3">
+                            <input type="number" id="p-final" class="w-24 p-2 bg-white text-blue-900 rounded-xl text-center font-black text-2xl outline-none shadow-inner" placeholder="?" onkeydown="if(event.key==='Enter') checkPart('perimeter')">
+                            <button onclick="checkPart('perimeter')" class="bg-white/20 hover:bg-white/40 p-3 rounded-xl text-xl font-black text-white leading-none transition btn-3d border-white/40">V</button>
+                        </div>
+                    </div>
+                    <div id="p-status-msg" class="hidden bg-green-50 text-green-700 border-green-400 border-2 p-3 mt-4 rounded-xl font-black text-center text-lg panel-3d">✅ היקף מדויק!</div>
+                </div>
+
+                <!-- Area Area -->
+                <div id="area-panel-container" class="bg-white p-6 rounded-[2.5rem] border border-emerald-100 relative overflow-hidden transition-all panel-3d">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-black text-emerald-900 flex items-center gap-2">
+                            <span class="bg-emerald-600 text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm shadow-md border-b-2 border-emerald-800">2</span>
+                            שטח הצורה
+                        </h3>
+                        <button id="walk-area-btn" onclick="startWalk('area')" class="text-sm bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border-2 border-emerald-200 px-4 py-2 rounded-xl flex items-center gap-2 shadow-sm font-black transition btn-3d">
+                            <span id="btn-char-a">🚶‍♂️</span> עזרה בשטח
+                        </button>
+                    </div>
+                    <div id="a-inputs" class="space-y-4 mb-4"></div>
+                    <div id="composite-final-area" class="flex items-center justify-between bg-emerald-600 text-white p-5 rounded-2xl shadow-md hidden border-b-4 border-emerald-800">
+                        <span class="font-black text-xl">שטח כולל:</span>
+                        <div class="flex items-center gap-3">
+                            <input type="number" id="a-final" class="w-24 p-2 bg-white text-emerald-900 rounded-xl text-center font-black text-2xl outline-none shadow-inner" placeholder="?" onkeydown="if(event.key==='Enter') checkPart('totalArea')">
+                            <button onclick="checkPart('totalArea')" class="bg-white/20 hover:bg-white/40 p-3 rounded-xl text-xl font-black text-white leading-none transition btn-3d border-white/40">V</button>
+                        </div>
+                    </div>
+                    <div id="a-status-msg" class="hidden bg-green-50 text-green-700 border-green-400 border-2 p-3 mt-4 rounded-xl font-black text-center text-lg panel-3d">✅ שטח מדויק!</div>
+                </div>
+                
+                <button id="check-btn" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-6 rounded-[2rem] text-2xl font-black shadow-2xl transition btn-3d border-slate-950 flex items-center justify-center gap-3 mt-2">
+                    <span>✅</span> סיים שלב ובדוק הכל
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="hidden fixed inset-0 flex items-center justify-center p-4 z-[600]">
+        <div class="bg-white rounded-[3.5rem] p-10 max-w-xl w-full shadow-2xl text-center border-b-[12px] border-amber-400 panel-3d">
+            <div class="text-8xl mb-6 drop-shadow-lg">🏆</div>
+            <h2 class="text-5xl font-black text-slate-800 mb-4">מעולה <span class="player-name-text text-blue-600"></span>!</h2>
+            <p class="text-slate-600 mb-4 text-2xl font-bold">השלמת את השלב הזה בהצלחה.</p>
+            <p class="text-amber-500 text-xl font-black mb-8">+50 מטבעות זהב!</p>
+            <button id="modal-next-btn" class="w-full bg-gradient-to-r from-orange-500 to-rose-600 hover:from-orange-600 text-white py-5 rounded-[2.5rem] text-2xl font-black shadow-xl transition-all btn-3d border-rose-800">המשך לשלב הבא ➔</button>
+        </div>
+    </div>
+
+    <!-- Final Report Modal -->
+    <div id="report-modal" class="hidden fixed inset-0 flex items-center justify-center p-4 z-[600]">
+        <div class="bg-white rounded-[3.5rem] p-10 max-w-3xl w-full shadow-2xl text-center border-b-[12px] border-emerald-500 text-right overflow-y-auto max-h-[90vh] panel-3d">
+            <div class="text-7xl mb-4 text-center drop-shadow-lg">📜</div>
+            <h2 class="text-4xl font-black text-slate-800 mb-2 text-center">תעודת הצטיינות</h2>
+            <h3 class="text-2xl text-blue-600 font-black mb-4 text-center">מוענקת בגאווה ל: <span class="player-name-text"></span></h3>
+            <p class="text-slate-700 mb-4 text-xl font-bold text-center">כל הכבוד על פתרון האתגרים הגיאומטריים בתלת-ממד!</p>
+            <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-8 text-center flex items-center justify-center gap-2">
+                <p class="text-lg font-bold text-amber-700">אספת במסע הזה:</p>
+                <div class="flex items-center font-black text-amber-500 text-4xl">
+                     <svg class="w-10 h-10 inline drop-shadow-sm ml-2"><use href="#icon-coin"></use></svg>
+                    <span id="final-coins-amount">0</span>
+                </div>
+            </div>
+            <button onclick="location.reload()" class="w-full max-w-sm mx-auto block bg-slate-800 text-white py-5 rounded-[2.5rem] text-xl font-black shadow-lg btn-3d border-slate-950">משחק חדש ➔</button>
+        </div>
+    </div>
+
+    <script>
+        let cur = 0;
+        let trophies = 0;
+        let activeDivId = null;
+        let helpEnabled = false;
+        let helpOnCooldown = false;
+        let helpTimeoutId = null;
+        let helpCooldownTimerId = null;
+        let cooldownSeconds = 0;
+        let cooldownInterval = null;
+        let coins = 0;
+        
+        let playerName = "התלמיד/ה";
+        let selectedStoryId = 'class42';
+        let difficulty = 2;
+        let levelsCache = [];
+        let MAX_LEVELS = 6;
+        let gameStarted = false;
+        let walkStepResolver = null;
+        let isWalking = false;
+        let AVAILABLE_GENERATORS = [];
+        let isMuted = false;
+
+        // Enlarged coordinate system dimensions
+        const SVG_W = 600;
+        const SVG_H = 500;
+
+        let audioCtx;
+        function initAudio() {
+            if(!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        document.getElementById('mute-btn').onclick = function() {
+            isMuted = !isMuted;
+            document.getElementById('mute-icon').textContent = isMuted ? '🔇' : '🔊';
+            this.classList.toggle('bg-red-50', isMuted);
+            this.classList.toggle('border-red-200', isMuted);
+        };
+
+        function playSound(type) {
+            if(!audioCtx || isMuted) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            if(type === 'coin') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(1200, now); osc.frequency.exponentialRampToValueAtTime(2000, now + 0.1);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
+            } else if (type === 'step') {
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(250, now);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                osc.start(now); osc.stop(now + 0.05);
+            } else if (type === 'success') {
+                osc.type = 'square'; osc.frequency.setValueAtTime(400, now); osc.frequency.setValueAtTime(600, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now); osc.stop(now + 0.2);
+            } else if (type === 'error') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(100, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now); osc.stop(now + 0.2);
+            } else if (type === 'tada') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(400, now); osc.frequency.setValueAtTime(500, now + 0.1); osc.frequency.setValueAtTime(600, now + 0.2);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now + 0.5);
+                osc.start(now); osc.stop(now + 0.5);
+            }
+        }
+
+        function addCoins(amount) {
+            coins += amount;
+            if (coins < 0) coins = 0;
+            const display = document.getElementById('coins-amount');
+            display.textContent = coins;
+            document.getElementById('final-coins-amount').textContent = coins;
+            
+            const container = document.getElementById('coins-display');
+            container.classList.remove('coin-anim');
+            void container.offsetWidth;
+            container.classList.add('coin-anim');
+            
+            if (amount > 0) {
+                playSound('coin'); container.style.borderColor = '#F59E0B';
+            } else if (amount < 0) {
+                container.style.borderColor = '#ef4444';
+                setTimeout(() => container.style.borderColor = '', 500);
+            }
+        }
+
+        function setDiff(d, btn) {
+            difficulty = d;
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('ring-4', 'ring-amber-400', 'ring-emerald-400', 'ring-rose-400'));
+            const colors = ['', 'emerald', 'amber', 'rose'];
+            btn.classList.add(`ring-4`, `ring-${colors[d]}-400`);
+        }
+
+        function toggleScratch() {
+            const box = document.getElementById('scratch-box');
+            box.classList.toggle('hidden');
+            document.getElementById('scratchpad').classList.remove('hidden');
+        }
+        
+        function checkEasterEgg(val, correctVal) {
+            if (val === 67 && val === correctVal) {
+                var duration = 2000; var end = Date.now() + duration;
+                playSound('tada');
+                (function frame() {
+                    confetti({ particleCount: 6, angle: 60, spread: 65, origin: { x: 0 }, colors: ['#fbbf24', '#f87171', '#60a5fa', '#34d399'] });
+                    confetti({ particleCount: 6, angle: 120, spread: 65, origin: { x: 1 }, colors: ['#fbbf24', '#f87171', '#60a5fa', '#34d399'] });
+                    if (Date.now() < end) requestAnimationFrame(frame);
+                }());
+            }
+        }
+
+        const themeMaps = {
+            emerald: { bg: 'bg-emerald-600', light: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-900' },
+            amber: { bg: 'bg-amber-500', light: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-900' },
+            indigo: { bg: 'bg-indigo-600', light: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-900' },
+            purple: { bg: 'bg-purple-600', light: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-900' },
+            blue: { bg: 'bg-blue-600', light: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-900' },
+            rose: { bg: 'bg-rose-600', light: 'bg-rose-50', border: 'border-rose-200', text: 'text-rose-900' },
+            cyan: { bg: 'bg-cyan-600', light: 'bg-cyan-50', border: 'border-cyan-200', text: 'text-cyan-900' },
+            teal: { bg: 'bg-teal-600', light: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-900' },
+            fuchsia: { bg: 'bg-fuchsia-600', light: 'bg-fuchsia-50', border: 'border-fuchsia-200', text: 'text-fuchsia-900' }
+        };
+
+        const STORIES = {
+            class42: {
+                name: "משימת כיתה ד'2", char: "🎒", themeColor: "blue", wandName: "עזרת המורה",
+                bg: (svg) => {
+                    svg.innerHTML += `
+                        <defs>
+                            <linearGradient id="g-school" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#f8fafc"/>
+                                <stop offset="100%" stop-color="#f1f5f9"/>
+                            </linearGradient>
+                            <pattern id="notebook" width="100" height="25" patternUnits="userSpaceOnUse">
+                                <line x1="0" y1="24" x2="1000" y2="24" stroke="#bae6fd" stroke-width="1.5"/>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#g-school)" />
+                        <rect width="100%" height="100%" fill="url(#notebook)" />
+                        <line x1="60" y1="0" x2="60" y2="1000" stroke="#fca5a5" stroke-width="2" opacity="0.6"/>
+                        <text x="450" y="100" font-size="40" opacity="0.25" class="float-obj">📝</text>
+                        <text x="400" y="180" font-size="30" opacity="0.2" class="float-obj-slow">📐</text>
+                        <text x="100" y="380" font-size="35" opacity="0.25" class="float-obj">📚</text>
+                    `;
+                },
+                stages: [
+                    { title: "שלב 1: מציאת השטח המושלם", desc: "יוצאים לדרך! מצאנו שטח בבית הספר לבנות בו את כיתה ד'2 החדשה. בואו נבדוק אם הגודל מתאים לילדים." },
+                    { title: "שלב 2: שולחנות וכיסאות", desc: "הילדים צריכים מרחב ללמידה. אנחנו מודדים את אזור הישיבה כדי לוודא שלכולם יהיה נוח ומרווח." },
+                    { title: "שלב 3: פינת הקריאה", desc: "פינת הקריאה והספרייה של הכיתה! עזרו לנו לחשב את המידות כדי שייכנסו כל הספרים והפופים האהובים עלינו." },
+                    { title: "שלב 4: לוח חכם ענק", desc: "מצאנו לוח חכם מושלם למורה גלי, אבל צריך לוודא שהוא מתאים בדיוק לקיר המרכזי של הכיתה." },
+                    { title: "שלב 5: אישור סופי מהמנהלת", desc: "המרחב מוכן. אנחנו משרטטים את הצורה הסופית של הכיתה כדי לאשר למנהלת שזה בדיוק הגודל המתאים לילדי ד'2!" },
+                    { title: "שלב בונוס: חצר ד'2", desc: "הכיתה מושלמת! עכשיו אנחנו מתכננים מתחם משחקים פרטי בחצר, רק בשביל ילדי כיתה ד'2 האלופים." }
+                ]
+            },
+            singers: {
+                name: "עולם הזמרות של גלי", char: "🎤", themeColor: "fuchsia", wandName: "מיקרופון קסם",
+                bg: (svg) => {
+                    svg.innerHTML += `
+                        <defs>
+                            <linearGradient id="g-sing" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#fdf4ff"/>
+                                <stop offset="100%" stop-color="#f0abfc"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#g-sing)" opacity="0.8"/>
+                        <polygon points="100,0 50,500 150,500" fill="#e879f9" opacity="0.3" class="float-obj-slow"/>
+                        <polygon points="500,0 450,500 550,500" fill="#c084fc" opacity="0.3" class="float-obj"/>
+                        <text x="50" y="120" font-size="30" fill="#d946ef" opacity="0.5" class="float-obj">🎵</text>
+                        <text x="480" y="180" font-size="40" fill="#a855f7" opacity="0.4" class="float-obj-slow">🎶</text>
+                        <text x="280" y="100" font-size="24" fill="#c026d3" opacity="0.6" class="float-obj">🎵</text>
+                        <circle cx="300" cy="250" r="180" fill="#fdf4ff" opacity="0.2" class="float-obj-slow"/>
+                    `;
+                },
+                stages: [
+                    { title: "שלב 1: הבמה של אנה זק", desc: "אנה זק צריכה עזרה בהכנת במת הטיקטוק החדשה שלה! עזרו לה לחשב את המידות." },
+                    { title: "שלב 2: הפארק של נועה קירל", desc: "נועה קירל מופיעה בפארק הירקון! עזרו לה לתכנן את מתחם ה-VIP של הפאוץ'." },
+                    { title: "שלב 3: האצטדיון של ביונסה", desc: "המלכה ביונסה הגיעה! עלינו לתכנן את רחבת הריקודים הענקית למופע שלה." },
+                    { title: "שלב 4: סיבוב ההופעות של טיילור סוויפט", desc: "טיילור סוויפט צריכה במה מיוחדת לסיבוב ההופעות The Eras Tour. השלימו חישובים!" },
+                    { title: "שלב 5: אולפן ההקלטות של אביגיל", desc: "הזמרת אביגיל מקליטה שיר חדש! חשבו את גודל קירות האולפן כדי שהסאונד יהיה מושלם." },
+                    { title: "שלב בונוס: מופע הענק של המנהיגה גלי!", desc: "כולן מתאחדות למופע הענק של המנהיגה גלי! חשבו את המידות של הבמה המרכזית הגדולה." }
+                ]
+            },
+            brawl: { 
+                name: "זירת הבראולרים", char: "🌵", themeColor: "purple", wandName: "שיקוי כוח",
+                bg: (svg) => {
+                    svg.innerHTML += `<defs><linearGradient id="g-p" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fae8ff"/><stop offset="100%" stop-color="#f3e8ff"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g-p)" /><g class="float-obj-slow"><rect x="100" y="180" width="80" height="300" fill="#d8b4fe" opacity="0.4" rx="10"/><polygon points="90,180 140,100 190,180" fill="#c084fc" opacity="0.6"/></g><circle cx="480" cy="100" r="50" fill="#e879f9" opacity="0.3" class="float-obj" /><circle cx="520" cy="150" r="25" fill="#c084fc" opacity="0.2" class="float-obj" style="animation-delay: 2s;" />`;
+                },
+                stages: [
+                    { title: "שלב 1: החומה החיצונית", desc: "התחלנו בהכנות לקרב! עזרו לנו לבנות את קיר ההגנה החיצוני כדי שלא ניפגע." },
+                    { title: "שלב 2: מחסן התחמושת", desc: "יופי, הקיר מוכן וחזק! עכשיו בתוך החומה אנחנו בונים את מחסן התחמושת בצורה הזו." },
+                    { title: "שלב 3: אבטחת התיבה", desc: "המחסן בנוי ומאובטח. במרכז נמצאת תיבת השלל המיוחדת - חשבו את ההיקף שלה להתקנת אזעקה." },
+                    { title: "שלב 4: הזירה המרכזית", desc: "האזעקה מותקנת והאויבים מתקרבים! בואו נכין במהירות את זירת הקרב המרכזית לקרב הסופי." },
+                    { title: "שלב 5: הגמר הגדול!", desc: "הזירה מוכנה וניצחנו בקרב הגדול! נשאר רק לחשב את מעמד הגביע הענק הזה כדי לחגוג." },
+                    { title: "שלב בונוס: חדר האוצר", desc: "איזה אלופים! פתחנו חדר אוצר מיוחד. חשבו את מידות החדר כדי לאסוף את הכל." }
+                ]
+            },
+            blocks: { 
+                name: "עולם הבלוקים", char: "👷", themeColor: "emerald", wandName: "מכוש יהלום",
+                bg: (svg) => {
+                    svg.innerHTML += `<defs><linearGradient id="g-f" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#dcfce7"/><stop offset="100%" stop-color="#bbf7d0"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g-f)" /><g opacity="0.8"><rect x="50" y="380" width="50" height="50" fill="#4ade80" stroke="#22c55e" stroke-width="2"/><rect x="100" y="380" width="50" height="50" fill="#86efac" stroke="#22c55e" stroke-width="2"/><rect x="75" y="330" width="50" height="50" fill="#4ade80" stroke="#22c55e" stroke-width="2"/><rect x="450" y="400" width="50" height="50" fill="#86efac" stroke="#22c55e" stroke-width="2"/></g><rect x="500" y="80" width="60" height="60" fill="#fef08a" opacity="0.7" class="float-obj-slow"/>`;
+                },
+                stages: [
+                    { title: "שלב 1: המקלט הראשון", desc: "הלילה יורד וסטיב חייב לבנות את המקלט הראשון שלו. עזרו לו למצוא את המידות." },
+                    { title: "שלב 2: חוות החיטה", desc: "שרדנו את הלילה במקלט! עכשיו צריך להרחיב ולהקים חוות חיטה גדולה שיהיה אוכל." },
+                    { title: "שלב 3: מכרה היהלומים", desc: "החווה עובדת ואנחנו שבעים. חפרנו עמוק אל במכרה וגילינו שטח מסתורי. מהן מידותיו?" },
+                    { title: "שלב 4: מבצר האבנים", desc: "עם היהלומים והאבנים שמצאנו במכרה, אנחנו עולים חזרה כדי לבנות את המבצר הענק." },
+                    { title: "שלב 5: שער הניצחון", desc: "המבצר עומד איתן! הגענו לשלב האחרון - בואו נחשב את מידות שער הניצחון לחזור הביתה." },
+                    { title: "שלב בונוס: טירת הזהב", desc: "חזרנו הביתה כגיבורים וכעת בונים לנו טירה מזהב טהור! חשבו את המידות." }
+                ]
+            },
+            aliens: { 
+                name: "פלישת החייזרים", char: "👽", themeColor: "indigo", wandName: "קרן לייזר",
+                bg: (svg) => {
+                    svg.innerHTML += `<defs><linearGradient id="g-s" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1e1b4b"/><stop offset="100%" stop-color="#312e81"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g-s)" /><g class="float-obj"><circle cx="60" cy="60" r="3" fill="white" /><circle cx="150" cy="110" r="2" fill="white" /><circle cx="360" cy="50" r="3.5" fill="white" /><circle cx="240" cy="180" r="1.5" fill="white" /></g><circle cx="480" cy="100" r="70" fill="#6366f1" opacity="0.4" class="float-obj-slow"/><circle cx="500" cy="80" r="12" fill="#818cf8" opacity="0.6" />`;
+                },
+                stages: [
+                    { title: "שלב 1: נחיתת האם", desc: "נחתנו על כדור הארץ! הדבר הראשון שעלינו לעשות הוא להציב שדה כוח סביב החללית." },
+                    { title: "שלב 2: מרכז הבקרה", desc: "שדה הכוח פעיל ומגן עלינו. כעת אנו מקימים את מרכז הבקרה הפנימי עם המידות המדויקות." },
+                    { title: "שלב 3: גלאי הלייזר", desc: "ממרכז הבקרה זיהינו איום. אנחנו צריכים לאבטח את הבסיס עם גלאי מיוחד, חשבו את מידותיו." },
+                    { title: "שלב 4: קולטני האנרגיה", desc: "הגלאים צורכים המון חשמל! האנרגיה אוזלת, חייבים לפרוס קולטנים חדשים למילוי מצברים." },
+                    { title: "שלב 5: המראה הביתה!", desc: "אספנו מספיק נתונים והאנרגיה מלאה! נשאר לחשב את כן השיגור ואנחנו טסים בחזרה לכוכב שלנו." },
+                    { title: "שלב בונוס: תחנת החלל", desc: "הגענו לחלל! בואו נחבר את החללית לתחנת החלל הבין גלקטית." }
+                ]
+            },
+            cyber: {
+                name: "עיר העתיד", char: "🤖", themeColor: "cyan", wandName: "פריצת סייבר",
+                bg: (svg) => {
+                    svg.innerHTML += `<defs><linearGradient id="g-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#164e63"/><stop offset="100%" stop-color="#083344"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g-c)" /><rect x="50" y="250" width="60" height="250" fill="#06b6d4" opacity="0.3"/><rect x="120" y="310" width="50" height="190" fill="#0891b2" opacity="0.4"/><rect x="480" y="180" width="70" height="320" fill="#ec4899" opacity="0.3"/><circle cx="300" cy="100" r="35" fill="#facc15" opacity="0.4" class="float-obj"/><line x1="0" y1="120" x2="600" y2="120" stroke="#22d3ee" stroke-width="1" opacity="0.2" stroke-dasharray="5,5"/>`;
+                },
+                stages: [
+                    { title: "שלב 1: לוח האם", desc: "הגענו לעיר העתיד! בואו נחשב את מידות לוח האם הראשי כדי להפעיל את המערכות." },
+                    { title: "שלב 2: גורד השחקים", desc: "המערכות עובדות. העיר זקוקה לגורד שחקים חדש מניאון שיחובר ללוח האם." },
+                    { title: "שלב 3: גשר הלייזר", desc: "כדי להגיע מגורד השחקים למרכז העיר, נחשב את ההיקף והשטח של גשר הלייזר המרחף." },
+                    { title: "שלב 4: כור ההיתוך", desc: "חצינו את הגשר, אבל העיר צריכה עוד אנרגיה! מהן המידות של כור ההיתוך המרובע?" },
+                    { title: "שלב 5: ליבת המערכת", desc: "הכור הופעל והגענו לליבת הסייבר! השלימו את החישוב כדי לשמור על רשת העיר בטוחה." },
+                    { title: "שלב בונוס: מגדל התקשורת", desc: "העיר פועלת! כדי לדבר עם ערים אחרות נבנה מגדל תקשורת ענק." }
+                ]
+            },
+            pirates: {
+                name: "אי הפיראטים", char: "🏴‍☠️", themeColor: "teal", wandName: "מצפן זהב",
+                bg: (svg) => {
+                    svg.innerHTML += `<defs><linearGradient id="g-pi" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ccfbf1"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g-pi)" /><path d="M0 400 Q 300 350 600 400 L 600 500 L 0 500 Z" fill="#d97706" opacity="0.5"/><circle cx="500" cy="120" r="50" fill="#fef08a" opacity="0.8" class="float-obj"/><path d="M 60 120 Q 95 95 130 120" stroke="#0f766e" stroke-width="2" fill="none" opacity="0.4" class="float-obj-slow"/><path d="M 180 145 Q 215 120 250 145" stroke="#0f766e" stroke-width="2" fill="none" opacity="0.4" class="float-obj-slow" style="animation-delay: 1s;"/>`;
+                },
+                stages: [
+                    { title: "שלב 1: מפת האוצר", desc: "אאהוי! מצאנו את אי הפיראטים. פתחו את מפת האוצר וחשבו את מידותיה כדי שנדע לאן ללכת." },
+                    { title: "שלב 2: ספינת הרפאים", desc: "לפי המפה, צריך לחצות את הביצה. בונים מזח עץ חדש לספינת הרפאים שלנו!" },
+                    { title: "שלב 3: מבצר הגולגולת", desc: "חצינו את הביצה! עכשיו חייבים להתבצר במבצר הגולגולת מפני אויבים." },
+                    { title: "שלב 4: מפרש הסערה", desc: "המבצר בטוח, אבל הרוח מתחזקת ועלינו לתפור מפרש סערה חדש כדי להתקדם לאוצר!" },
+                    { title: "שלב 5: תיבת הזהב הגדולה", desc: "הגענו סוף סוף! חשבו את שטח מכסה תיבת האוצר הענקית כדי לפרוץ אותה ולהיות עשירים!" },
+                    { title: "שלב בונוס: ארמון הקפטן", desc: "עם כל הזהב שמצאנו נבנה ארמון ענק לקפטן! עזרו לנו בשרטוט." }
+                ]
+            },
+            forest: { 
+                name: "יער הקסמים", char: "🧝‍♂️", themeColor: "emerald", wandName: "אבקת פיות",
+                bg: (svg) => {
+                    svg.innerHTML += `<defs><linearGradient id="g-f-2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#dcfce7"/><stop offset="100%" stop-color="#bbf7d0"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g-f-2)" /><path d="M0 320 Q 180 250 360 350 T 600 320 L 600 500 L 0 500 Z" fill="#86efac" opacity="0.5"/><g opacity="0.8" class="float-obj-slow"><rect x="70" y="330" width="20" height="60" fill="#78350f" rx="3" /><circle cx="80" cy="300" r="40" fill="#22c55e" /><circle cx="60" cy="310" r="30" fill="#16a34a" /><circle cx="100" cy="310" r="30" fill="#16a34a" /></g><circle cx="480" cy="120" r="5" fill="#fbbf24" opacity="0.6" class="float-obj"/><circle cx="520" cy="160" r="4" fill="#fbbf24" opacity="0.5" class="float-obj" style="animation-delay: 1s;"/>`;
+                },
+                stages: [
+                    { title: "שלב 1: מחנה הפיות", desc: "נכנסנו ליער הקסום. הפיות מבקשות שנעזור להן לבנות שביל מגן מסביב למחנה." },
+                    { title: "שלב 2: מזח הנהר", desc: "תודה שעזרתם לפיות! כהוקרת תודה הן הראו לנו נהר, בואו נחשב את מידות המזח לחצות אותו." },
+                    { title: "שלב 3: עץ החיים", desc: "חצינו את הנהר והגענו ללב היער, עץ החיים. הבסיס שלו דורש חישוב מורכב." },
+                    { title: "שלב 4: המערה הסודית", desc: "מתחת לעץ מסתתרת מערה קסומה. פתרו את חידת מידות הפתח כדי להיכנס." },
+                    { title: "שלב 5: מסיבת היער", desc: "מצאנו את הקריסטל במערה! עכשיו בונים רחבת ריקודים גדולה למסיבה של כל חיות היער." },
+                    { title: "שלב בונוס: שביל הכוכבים", desc: "המסיבה נגמרה, וכדי לצאת מהיער נבנה את שביל הכוכבים הזוהר." }
+                ]
+            },
+            ocean: { 
+                name: "ממלכת אטלנטיס", char: "🧜‍♀️", themeColor: "blue", wandName: "קונכיית קסם",
+                bg: (svg) => {
+                    svg.innerHTML += `<defs><linearGradient id="g-o" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#bfdbfe"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g-o)" opacity="0.6"/><g class="float-obj"><circle cx="120" cy="180" r="12" fill="#60a5fa" opacity="0.4"/><circle cx="140" cy="150" r="18" fill="#60a5fa" opacity="0.4"/><circle cx="120" cy="100" r="10" fill="#60a5fa" opacity="0.3"/></g><path d="M 0 430 Q 180 370 300 430 T 600 410 L 600 500 L 0 500 Z" fill="#1d4ed8" opacity="0.2"/><path d="M 0 460 Q 240 400 360 460 T 600 440 L 600 500 L 0 500 Z" fill="#1e3a8a" opacity="0.2"/>`;
+                },
+                stages: [
+                    { title: "שלב 1: שער העיר התת-ימית", desc: "צללנו למעמקים והגענו לאטלנטיס! עזרו לבנות את השער המגן כדי שניכנס בבטחה." },
+                    { title: "שלב 2: ארמון האלמוגים", desc: "נכנסנו לעיר! עכשיו צריך לעזור למלך לשפץ את ארמון האלמוגים המלכותי." },
+                    { title: "שלב 3: חומת הפנינים", desc: "הארמון מהמם, וסביבו ישנה חומה יקרה מפנינים שיש לתקן. מה ההיקף והשטח שלה?" },
+                    { title: "שלב 4: תיבת האוצר השקועה", desc: "מעבר לחומה מצאנו תיבת אוצר עתיקה אבודה בקרקעית! חשבו את מידותיה." },
+                    { title: "שלב 5: כס המלכות של פוסידון", desc: "הבאנו את האוצר למלך! כהוקרה, אנו מתקנים את כס המלכות של פוסידון." },
+                    { title: "שלב בונוס: מזח הצוללות", desc: "המסע הושלם. בונים מזח לצוללת שלנו כדי לעלות בחזרה מעל פני הים." }
+                ]
+            },
+            ninja: { 
+                name: "כפר הנינג'ות", char: "🥷", themeColor: "rose", wandName: "פצצת עשן",
+                bg: (svg) => {
+                    svg.innerHTML += `<defs><linearGradient id="g-n" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fecdd3"/><stop offset="100%" stop-color="#fb7185"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g-n)" opacity="0.6"/><circle cx="480" cy="150" r="70" fill="#e11d48" opacity="0.6" class="float-obj-slow"/><path d="M 0 500 L 180 250 L 360 500 Z" fill="#9f1239" opacity="0.3"/><path d="M 240 500 L 420 180 L 600 500 Z" fill="#881337" opacity="0.2"/>`;
+                },
+                stages: [
+                    { title: "שלב 1: חומת האימונים", desc: "ברוכים הבאים לכפר הנינג'ות. התחלנו באימון הראשון: חשבו את חומת הטיפוס." },
+                    { title: "שלב 2: מקדש הצללים", desc: "עברנו את החומה בהצלחה! כעת עלינו להתגנב למקדש הצללים. מהן המידות של המבנה?" },
+                    { title: "שלב 3: זירת השוריקן", desc: "מתוך המקדש הגענו לזירת השוריקן. חשבו את מידות הזירה לאימון הקליעה." },
+                    { title: "שלב 4: גשר הדרקון", desc: "האימון עבר מעולה. כדי להגיע לטירה צריך לחצות את גשר הדרקון העתיק." },
+                    { title: "שלב 5: טירת השוגון", desc: "המשימה האחרונה! אנחנו בטירת השוגון. פתרו את חידת השטח כדי להפוך למאסטר." },
+                    { title: "שלב בונוס: חדר הסודות", desc: "קיבלתם תואר מאסטר נינג'ה! כנסו לחדר הסודות וחשבו את ההיקף." }
+                ]
+            },
+            dino: { 
+                name: "פארק הדינוזאורים", char: "🦖", themeColor: "amber", wandName: "רדאר קדום",
+                bg: (svg) => {
+                    svg.innerHTML += `<defs><linearGradient id="g-d" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fef3c7"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g-d)" opacity="0.5"/><path d="M 0 430 Q 120 310 300 430 T 600 370 L 600 500 L 0 500 Z" fill="#b45309" opacity="0.3"/><g opacity="0.6" class="float-obj-slow"><path d="M 420 310 L 432 220 L 444 310 Z" fill="#78350f" /><path d="M 396 330 L 408 240 L 420 330 Z" fill="#78350f" /></g>`;
+                },
+                stages: [
+                    { title: "שלב 1: גדר הטי-רקס", desc: "הגענו לפארק היורה! משימה ראשונה - ודאו את המידות של הגדר כדי שיהיה בטוח." },
+                    { title: "שלב 2: מתחם הבקיעה", desc: "הגדרות מאובטחות והדינוזאורים בוקעים. עזרו לחשב את שטח המדגרה." },
+                    { title: "שלב 3: שער הפארק הענק", desc: "הדינוזאורים גדלו ושער הכניסה זקוק לחיזוקים. פתרו את חידת הצלעות." },
+                    { title: "שלב 4: גשר התצפית", desc: "אחרי שחיזקנו את השער, בונים גשר חדש מעל אגם המים לתצפית." },
+                    { title: "שלב 5: מרכז המבקרים", desc: "המשימה הסופית! מרכז המבקרים של הפארק נפתח לחגיגה, השלימו חישובים אחרונים." },
+                    { title: "שלב בונוס: מסלול הג'יפים", desc: "הפארק פתוח! שרטטו את מסלול הג'יפים החדש מסביב לדינוזאורים." }
+                ]
+            }
+        };
+
+        function updateTheme(world, stageIndex) {
+            const theme = themeMaps[world.themeColor] || themeMaps.indigo;
+            const sp = document.getElementById('story-panel');
+            sp.className = `w-full p-6 rounded-[2.5rem] border relative overflow-hidden transition-colors duration-500 ${theme.light} ${theme.border} text-right panel-3d`;
+            document.getElementById('story-blob').className = `absolute top-0 right-0 w-40 h-40 rounded-full -mr-20 -mt-20 opacity-40 transition-colors duration-500 ${theme.bg}`;
+            document.getElementById('story-title').className = `text-2xl font-black mb-2 flex items-center gap-3 justify-start w-fit ${theme.text}`;
+            document.getElementById('story-desc').className = `font-bold text-lg leading-relaxed transition-colors duration-500 max-w-4xl ${theme.text}`;
+            document.getElementById('story-char').textContent = world.char;
+            document.getElementById('walker-char').textContent = world.char;
+            
+            const btnP = document.getElementById('btn-char-p');
+            if(btnP) btnP.textContent = world.char;
+            
+            const btnA = document.getElementById('btn-char-a');
+            if(btnA) btnA.textContent = world.char;
+            
+            const stage = world.stages[stageIndex % world.stages.length];
+            document.getElementById('story-title-text').textContent = stage.title;
+            document.getElementById('story-desc').textContent = stage.desc;
+        }
+
+        // --- Shape Generation Functions ---
+        function genLShape(diff) {
+            let w1 = 3 + Math.floor(Math.random()*6); let h1 = 3 + Math.floor(Math.random()*5); 
+            let w2 = 3 + Math.floor(Math.random()*6); let h2 = 4 + Math.floor(Math.random()*5); 
+            let sides = [
+                { x: w1/2, y: 0, val: w1, id: 't1', pos: 'top' },
+                { x: w1, y: h1/2, val: h1, id: 'il', pos: 'right' },
+                { x: w1+w2/2, y: h1, val: w2, id: 't2', pos: 'top' },
+                { x: w1+w2, y: h1+h2/2, val: h2, id: 'r', pos: 'right' },
+                { x: (w1+w2)/2, y: h1+h2, val: w1+w2, id: 'b', pos: 'bottom' },
+                { x: 0, y: (h1+h2)/2, val: h1+h2, id: 'l', pos: 'left' }
+            ];
+            
+            if (diff >= 1) { sides[2].type = 'missing'; sides[2].correct = w2; sides[2].parts = ['b', 't1']; sides[2].op = '-'; }
+            if (diff >= 2) { sides[5].type = 'missing'; sides[5].correct = h1+h2; sides[5].parts = ['r', 'il']; sides[5].op = '+'; }
+
+            return {
+                points: [[0,0], [w1,0], [w1,h1], [w1+w2,h1], [w1+w2,h1+h2], [0,h1+h2]], sides: sides,
+                dividers: [
+                    { id: 'd1', lines: [{x1:w1, y1:h1, x2:w1, y2:h1+h2}], rects: [{x:0, y:0, w:w1, h:h1+h2, fill: "#bae6fd", labelX: w1/2, labelY: (h1+h2)/2}, {x:w1, y:h1, w:w2, h:h2, fill: "#bbf7d0", labelX: w1+w2/2, labelY: h1+h2/2}] },
+                    { id: 'd2', lines: [{x1:0, y1:h1, x2:w1, y2:h1}], rects: [{x:0, y:0, w:w1, h:h1, fill: "#bae6fd", labelX: w1/2, labelY: h1/2}, {x:0, y:h1, w:w1+w2, h:h2, fill: "#bbf7d0", labelX: (w1+w2)/2, labelY: h1+h2/2}] }
+                ],
+                ansP: (w1+w2+h1+h2)*2, ansA: (w1*(h1+h2)) + (w2*h2)
+            };
+        }
+
+        function genStairShape(diff) {
+            let w1 = 3 + Math.floor(Math.random()*5); let h1 = 3 + Math.floor(Math.random()*4); 
+            let w2 = 4 + Math.floor(Math.random()*6); let h2 = 3 + Math.floor(Math.random()*4); 
+            let sides = [
+                { x: w1/2, y: h1, val: w1, id: 'ib', pos: 'top' }, 
+                { x: w1, y: h1/2, val: h1, id: 'il', pos: 'left' },
+                { x: w1+w2/2, y: 0, val: w2, id: 't', pos: 'top' }, 
+                { x: w1+w2, y: (h1+h2)/2, val: h1+h2, id: 'r', pos: 'right' },
+                { x: (w1+w2)/2, y: h1+h2, val: w1+w2, id: 'b', pos: 'bottom'}, 
+                { x: 0, y: h1+h2/2, val: h2, id: 'l', pos: 'left'}
+            ];
+            
+            if (diff >= 1) { sides[0].type = 'missing'; sides[0].correct = w1; sides[0].parts = ['b', 't']; sides[0].op='-'; }
+            if (diff >= 2) { sides[3].type = 'missing'; sides[3].correct = h1+h2; sides[3].parts = ['l', 'il']; sides[3].op='+'; }
+
+            return {
+                points: [[0,h1], [w1,h1], [w1,0], [w1+w2,0], [w1+w2,h1+h2], [0,h1+h2]], sides: sides,
+                dividers: [
+                    { id: 'd1', lines: [{x1:w1, y1:h1, x2:w1, y2:h1+h2}], rects: [{x:0, y:h1, w:w1, h:h2, fill: "#fef3c7", labelX: w1/2, labelY: h1+h2/2}, {x:w1, y:0, w:w2, h:h1+h2, fill: "#bbf7d0", labelX: w1+w2/2, labelY: (h1+h2)/2}] },
+                    { id: 'd2', lines: [{x1:0, y1:h1, x2:w1+w2, y2:h1}], rects: [{x:0, y:h1, w:w1+w2, h:h2, fill: "#fef3c7", labelX: (w1+w2)/2, labelY: h1+h2/2}, {x:w1, y:0, w:w2, h:h1, fill: "#bbf7d0", labelX: w1+w2/2, labelY: h1/2}] }
+                ],
+                ansP: (w1+w2+h1+h2)*2, ansA: (w1*h2) + (w2*(h1+h2))
+            };
+        }
+
+        function genUShape(diff) {
+            let w1 = 3 + Math.floor(Math.random()*3), w2 = 3 + Math.floor(Math.random()*4), w3 = 3 + Math.floor(Math.random()*3), h1 = 3 + Math.floor(Math.random()*4), h2 = 2 + Math.floor(Math.random()*3);
+            let sides = [
+                { x: w1/2, y: 0, val: w1, id: 't1', pos: 'top' }, 
+                { x: w1, y: h1/2, val: h1, id: 'il', pos: 'right' },
+                { x: w1+w2/2, y: h1, val: w2, id: 'ib', pos: 'top' }, 
+                { x: w1+w2, y: h1/2, val: h1, id: 'ir', pos: 'left' },
+                { x: w1+w2+w3/2, y: 0, val: w3, id: 't2', pos: 'top' }, 
+                { x: w1+w2+w3, y: (h1+h2)/2, val: h1+h2, id: 'r', pos: 'right' },
+                { x: (w1+w2+w3)/2, y: h1+h2, val: w1+w2+w3, id: 'b', pos: 'bottom' }, 
+                { x: 0, y: (h1+h2)/2, val: h1+h2, id: 'l', pos: 'left' }
+            ];
+            
+            if (diff >= 1) { sides[2].type = 'missing'; sides[2].correct = w2; sides[2].parts = ['b', 't1', 't2']; sides[2].op=['-', '-']; }
+            if (diff >= 2) { sides[7].type = 'missing'; sides[7].correct = h1+h2; sides[7].parts = ['r']; sides[7].op='='; } 
+
+            return {
+                points: [[0,0], [w1,0], [w1,h1], [w1+w2,h1], [w1+w2,0], [w1+w2+w3,0], [w1+w2+w3,h1+h2], [0,h1+h2]], sides: sides,
+                dividers: [
+                    { id: 'd1', lines: [{x1:w1, y1:h1, x2:w1, y2:h1+h2}, {x1:w1+w2, y1:h1, x2:w1+w2, y2:h1+h2}], rects: [{x:0, y:0, w:w1, h:h1+h2, fill: "#bae6fd", labelX: w1/2, labelY: (h1+h2)/2}, {x:w1, y:h1, w:w2, h:h2, fill: "#fef3c7", labelX: w1+w2/2, labelY: h1+h2/2}, {x:w1+w2, y:0, w:w3, h:h1+h2, fill: "#bbf7d0", labelX: w1+w2+w3/2, labelY: (h1+h2)/2}] },
+                    { id: 'd2', lines: [{x1:0, y1:h1, x2:w1, y2:h1}, {x1:w1+w2, y1:h1, x2:w1+w2+w3, y2:h1}], rects: [{x:0, y:0, w:w1, h:h1, fill: "#bae6fd", labelX: w1/2, labelY: h1/2}, {x:0, y:h1, w:w1+w2+w3, h:h2, fill: "#fef3c7", labelX: (w1+w2+w3)/2, labelY: h1+h2/2}, {x:w1+w2, y:0, w:w3, h:h1, fill: "#bbf7d0", labelX: w1+w2+w3/2, labelY: h1/2}] }
+                ],
+                ansP: (w1+w2+w3+h1+h2)*2 + (h1*2), ansA: (w1*(h1+h2)) + (w2*h2) + (w3*(h1+h2))
+            };
+        }
+
+        function genPlusShape(diff) {
+            let w = 3 + Math.floor(Math.random()*3), h = 3 + Math.floor(Math.random()*4);
+            let sides = [
+                { x: w*1.5, y: 0, val: w, id: 't', pos: 'top' }, 
+                { x: w*2, y: h*0.5, val: h, id: 'tr1', pos: 'right' },
+                { x: w*2.5, y: h, val: w, id: 'r1', pos: 'top' }, 
+                { x: w*3, y: h*1.5, val: h, id: 'r2', pos: 'right' },
+                { x: w*2.5, y: h*2, val: w, id: 'r3', pos: 'bottom' }, 
+                { x: w*2, y: h*2.5, val: h, id: 'br1', pos: 'right' },
+                { x: w*1.5, y: h*3, val: w, id: 'b', pos: 'bottom' }, 
+                { x: w, y: h*2.5, val: h, id: 'bl1', pos: 'left' },
+                { x: w*0.5, y: h*2, val: w, id: 'l3', pos: 'bottom' }, 
+                { x: 0, y: h*1.5, val: h, id: 'l2', pos: 'left' },
+                { x: w*0.5, y: h, val: w, id: 'l1', pos: 'top' }, 
+                { x: w, y: h*0.5, val: h, id: 'tl1', pos: 'left' }
+            ];
+            
+            if (diff >= 1) { sides[0].type = 'missing'; sides[0].correct = w; sides[0].parts = ['b']; sides[0].op = '='; }
+            if (diff >= 2) { sides[3].type = 'missing'; sides[3].correct = h; sides[3].parts = ['l2']; sides[3].op = '='; }
+            if (diff >= 3) { sides[6].type = 'missing'; sides[6].correct = w; sides[6].parts = ['t']; sides[6].op = '='; }
+
+            return {
+                points: [[w,0], [w*2,0], [w*2,h], [w*3,h], [w*3,h*2], [w*2,h*2], [w*2,h*3], [w,h*3], [w,h*2], [0,h*2], [0,h], [w,h]], sides: sides,
+                dividers: [
+                    { id: 'd1', lines: [{x1:w, y1:h, x2:w, y2:h*2}, {x1:w*2, y1:h, x2:w*2, y2:h*2}], rects: [{x:w, y:0, w:w, h:h*3, fill: "#bbf7d0", labelX: w*1.5, labelY: h*1.5}, {x:0, y:h, w:w, h:h, fill: "#bae6fd", labelX: w*0.5, labelY: h*1.5}, {x:w*2, y:h, w:w, h:h, fill: "#fef3c7", labelX: w*2.5, labelY: h*1.5}] },
+                    { id: 'd2', lines: [{x1:w, y1:h, x2:w*2, y2:h}, {x1:w, y1:h*2, x2:w*2, y2:h*2}], rects: [{x:0, y:h, w:w*3, h:h, fill: "#bae6fd", labelX: w*1.5, labelY: h*1.5}, {x:w, y:0, w:w, h:h, fill: "#bbf7d0", labelX: w*1.5, labelY: h*0.5}, {x:w, y:h*2, w:w, h:h, fill: "#fef3c7", labelX: w*1.5, labelY: h*2.5}] }
+                ],
+                ansP: w*4 + h*8, ansA: (w*w)*5
+            };
+        }
+
+        function genSimpleRect() {
+            let w = 5 + Math.floor(Math.random()*8); let h = 4 + Math.floor(Math.random()*6);
+            return {
+                points: [[0,0], [w,0], [w,h], [0,h]],
+                sides: [{x:w/2, y:0, val:w, id:'t', pos:'top'}, {x:w, y:h/2, val:h, id:'r', pos:'right'}, {x:w/2, y:h, val:w, id:'b', pos:'bottom'}, {x:0, y:h/2, val:h, id:'l', pos:'left'}],
+                dividers: [], rects: [{x:0, y:0, w:w, h:h, fill: "#bae6fd", labelX: w/2, labelY: h/2}], ansP: (w+h)*2, ansA: w*h
+            };
+        }
+
+        function genParallelogram(diff) {
+            let b = 6 + Math.floor(Math.random()*6); let side = 5 + Math.floor(Math.random()*3);
+            let sides = [
+                {x: b/2 + 2, y: 0, val: b, id: 't', pos: 'top'}, 
+                {x: b + 1, y: 2, val: side, id: 'r', pos: 'right'},
+                {x: b/2, y: 4, val: b, id: 'b', pos: 'bottom'}, 
+                {x: 1, y: 2, val: side, id: 'l', pos: 'left'}
+            ];
+            if (diff >= 1) { sides[0].type = 'missing'; sides[0].correct = b; sides[0].parts = ['b']; sides[0].op = '='; }
+            if (diff >= 2) { sides[3].type = 'missing'; sides[3].correct = side; sides[3].parts = ['r']; sides[3].op = '='; }
+            return { points: [[2,0], [b+2,0], [b,4], [0,4]], sides: sides, dividers: [], rects: [], ansP: (b+side)*2, ansA: null };
+        }
+
+        function genRhombus(diff) {
+            let a = 5 + Math.floor(Math.random()*7);
+            let sides = [
+                {x: 6, y: 1.5, val: a, id: 'tr', pos: 'right'}, 
+                {x: 6, y: 4.5, val: a, id: 'br', pos: 'right'},
+                {x: 2, y: 4.5, val: a, id: 'bl', pos: 'left'}, 
+                {x: 2, y: 1.5, val: a, id: 'tl', pos: 'left'}
+            ];
+            if (diff >= 1) { sides[2].type = 'missing'; sides[2].correct = a; sides[2].parts = ['tr']; sides[2].op = '='; }
+            if (diff >= 2) { sides[0].type = 'missing'; sides[0].correct = a; sides[0].parts = ['bl']; sides[0].op = '='; }
+            return { points: [[4,0], [8,3], [4,6], [0,3]], sides: sides, dividers: [], rects: [], ansP: a*4, ansA: null };
+        }
+
+        function genIsoscelesTrapezoid(diff) {
+            let top = 4 + Math.floor(Math.random()*5); let bottom = top + 4; let leg = 5 + Math.floor(Math.random()*4);
+            let sides = [
+                {x: 5, y: 0, val: top, id: 't', pos: 'top'}, 
+                {x: 5 + top/2 + 1, y: 2, val: leg, id: 'r', pos: 'right'},
+                {x: 5, y: 4, val: bottom, id: 'b', pos: 'bottom'}, 
+                {x: 5 - top/2 - 1, y: 2, val: leg, id: 'l', pos: 'left'}
+            ];
+            if (diff >= 1) { sides[3].type = 'missing'; sides[3].correct = leg; sides[3].parts = ['r']; sides[3].op = '='; }
+            return { points: [[5 - top/2, 0], [5 + top/2, 0], [5 + bottom/2, 4], [5 - bottom/2, 4]], sides: sides, dividers: [], rects: [], ansP: top + bottom + leg*2, ansA: null };
+        }
+
+        function genKite(diff) {
+            let t_leg = 4 + Math.floor(Math.random()*4), b_leg = 7 + Math.floor(Math.random()*5);
+            let sides = [
+                {x: 4.5, y: 1.5, val: t_leg, id: 'tr', pos: 'right'}, 
+                {x: 4.5, y: 6.5, val: b_leg, id: 'br', pos: 'right'},
+                {x: 1.5, y: 6.5, val: b_leg, id: 'bl', pos: 'left'}, 
+                {x: 1.5, y: 1.5, val: t_leg, id: 'tl', pos: 'left'}
+            ];
+            if (diff >= 1) { sides[3].type = 'missing'; sides[3].correct = t_leg; sides[3].parts = ['tr']; sides[3].op = '='; }
+            if (diff >= 2) { sides[1].type = 'missing'; sides[1].correct = b_leg; sides[1].parts = ['bl']; sides[1].op = '='; }
+            return { points: [[3,0], [6,3], [3,10], [0,3]], sides: sides, dividers: [], rects: [], ansP: (t_leg + b_leg)*2, ansA: null };
+        }
+
+        function genEquilateralTriangle(diff) {
+            let a = 6 + Math.floor(Math.random()*8);
+            let sides = [
+                {x: 4.5, y: 2.5, val: a, id: 'r', pos: 'right'}, 
+                {x: 3, y: 5.5, val: a, id: 'b', pos: 'bottom'}, 
+                {x: 1.5, y: 2.5, val: a, id: 'l', pos: 'left'}
+            ];
+            if (diff >= 1) { sides[2].type = 'missing'; sides[2].correct = a; sides[2].parts = ['b']; sides[2].op = '='; }
+            if (diff >= 2) { sides[0].type = 'missing'; sides[0].correct = a; sides[0].parts = ['l']; sides[0].op = '='; }
+            return { points: [[3,0], [6,5], [0,5]], sides: sides, dividers: [], rects: [], ansP: a*3, ansA: null };
+        }
+
+        function genRightTriangle(diff) {
+            let w = 4 + Math.floor(Math.random()*4), h = 3 + Math.floor(Math.random()*4), hyp = Math.round(Math.sqrt(w*w + h*h));
+            let sides = [
+                {x: 0, y: 1.5, val: h, id: 'l', pos: 'left'}, 
+                {x: 2, y: 3.5, val: w, id: 'b', pos: 'bottom'}, 
+                {x: 2.5, y: 1.5, val: hyp, id: 'hyp', pos: 'right'}
+            ];
+            return { points: [[0,0], [0,3], [4,3]], sides: sides, dividers: [], rects: [], ansP: w + h + hyp, ansA: null };
+        }
+
+        // --- Setup Game ---
+        document.getElementById('start-game-btn').onclick = () => {
+            initAudio();
+            const name = document.getElementById('player-name-input').value.trim();
+            if(name) playerName = name;
+            MAX_LEVELS = parseInt(document.getElementById('levels-select').value);
+            selectedStoryId = document.getElementById('story-select').value;
+            
+            AVAILABLE_GENERATORS = [];
+            if(document.getElementById('chk-comp').checked) AVAILABLE_GENERATORS.push(genLShape, genStairShape, genUShape, genPlusShape);
+            if(document.getElementById('chk-simple').checked) AVAILABLE_GENERATORS.push(genSimpleRect);
+            if(document.getElementById('chk-triangles').checked) AVAILABLE_GENERATORS.push(genRightTriangle, genEquilateralTriangle);
+            if(document.getElementById('chk-quads').checked) AVAILABLE_GENERATORS.push(genParallelogram, genRhombus, genIsoscelesTrapezoid, genKite);
+            
+            if(AVAILABLE_GENERATORS.length === 0) AVAILABLE_GENERATORS.push(genLShape);
+
+            const pNameDisp = document.getElementById('player-name-display');
+            if (pNameDisp) pNameDisp.textContent = playerName;
+            
+            document.querySelectorAll('.player-name-text').forEach(e => e.textContent = playerName);
+            document.getElementById('welcome-modal').classList.add('hidden');
+            document.getElementById('scratchpad').classList.remove('hidden');
+            
+            gameStarted = true; cur = 0; levelsCache = []; coins = 0;
+            addCoins(0);
+            init();
+        };
+
+        function getLevel(index) {
+            if(!levelsCache[index]) {
+                const gen = AVAILABLE_GENERATORS[index % AVAILABLE_GENERATORS.length];
+                let l = gen(difficulty);
+                let maxX=0, maxY=0; l.points.forEach(p=>{if(p[0]>maxX) maxX=p[0]; if(p[1]>maxY) maxY=p[1];});
+                
+                // Increase shape size significantly by reducing the empty space division
+                let grid = Math.min((SVG_W - 160)/maxX, (SVG_H - 160)/maxY);
+                l.grid = grid; 
+                l.offX = (SVG_W - maxX*grid)/2; 
+                l.offY = (SVG_H - maxY*grid)/2;
+                levelsCache[index] = l;
+            }
+            return levelsCache[index];
+        }
+
+        function init() {
+            if(!gameStarted || cur >= MAX_LEVELS) {
+                if(cur >= MAX_LEVELS) {
+                    playSound('tada');
+                    document.getElementById('report-modal').classList.remove('hidden');
+                }
+                return;
+            }
+            
+            document.querySelectorAll('.add-helper').forEach(e => e.remove());
+            activeDivId = null;
+            isWalking = false;
+            walkStepResolver = null;
+
+            const world = STORIES[selectedStoryId];
+            const level = getLevel(cur);
+            
+            const helpTextSpan = document.getElementById('help-text-span');
+            helpTextSpan.textContent = cur > 0 ? "עזרה (10)" : "עזרה (חינם)";
+
+            if(helpCooldownTimerId) clearTimeout(helpCooldownTimerId);
+            if(cooldownInterval) clearInterval(cooldownInterval);
+            helpEnabled = false; helpOnCooldown = false;
+            
+            const helpBtn = document.getElementById('toggle-help-btn');
+            helpBtn.classList.remove('grayscale-0');
+            helpBtn.style.opacity = '1';
+            helpBtn.style.cursor = 'pointer';
+            document.getElementById('help-icon-span').innerHTML = '<svg class="w-6 h-6"><use href="#icon-bulb"></use></svg>';
+            document.getElementById('help-indicator').classList.add('hidden');
+            
+            updateTheme(world, cur);
+            
+            document.getElementById('level-num').textContent = cur + 1;
+            document.getElementById('progress-bar').style.width = `${(cur/MAX_LEVELS)*100}%`;
+            document.getElementById('p-final').value = '';
+            document.getElementById('a-final').value = '';
+            document.getElementById('p-inputs').innerHTML = '<div class="text-slate-400 text-sm font-bold w-full text-right mb-2" dir="rtl">מספרים שייאספו בטיול:</div>';
+            
+            const areaPanel = document.getElementById('area-panel-container');
+            if (level.ansA === null || level.ansA === undefined) {
+                areaPanel.classList.add('hidden');
+            } else {
+                areaPanel.classList.remove('hidden');
+                document.getElementById('a-inputs').innerHTML = '<div class="text-indigo-800 bg-indigo-50 border-2 border-dashed border-indigo-300 p-4 rounded-xl text-center font-black animate-pulse transition-all shadow-sm">✂️ לחצו על אחד מהקווים הכתומים המקווקווים כדי לחלק את הצורה!</div>';
+                document.getElementById('composite-final-area').classList.add('hidden');
+                if(level.dividers.length === 0) { 
+                    document.getElementById('a-inputs').innerHTML = '';
+                    selectDivider({id: 'dummy', rects: level.rects, lines: []});
+                }
+            }
+
+            document.getElementById('interactive-overlay').innerHTML = '';
+            document.getElementById('status-msg').classList.add('hidden');
+            document.getElementById('p-status-msg').classList.add('hidden');
+            document.getElementById('a-status-msg').classList.add('hidden');
+            
+            const svg = document.getElementById('game-svg');
+            svg.innerHTML = '';
+            
+            const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+            defs.innerHTML = `
+                <filter id="shape-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="0" dy="15" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.3"/>
+                </filter>`;
+            svg.appendChild(defs);
+
+            if(world.bg) world.bg(svg);
+
+            const dStr = "M " + level.points.map(p => `${level.offX + p[0]*level.grid},${level.offY + p[1]*level.grid}`).join(" L ") + " Z";
+            const shape = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            shape.setAttribute('d', dStr); 
+            shape.setAttribute('fill', 'rgba(255, 255, 255, 0.95)'); 
+            shape.setAttribute('stroke', '#0f172a'); 
+            shape.setAttribute('stroke-width', '6');
+            shape.setAttribute('stroke-linejoin', 'round');
+            shape.setAttribute('filter', 'url(#shape-shadow)');
+            svg.appendChild(shape);
+
+            const rectGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            rectGroup.setAttribute("id", "area-rects-group");
+            svg.appendChild(rectGroup);
+
+            if(level.dividers) {
+                level.dividers.forEach(div => {
+                    div.lines.forEach(l => {
+                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        line.setAttribute('x1', level.offX + l.x1*level.grid); line.setAttribute('y1', level.offY + l.y1*level.grid);
+                        line.setAttribute('x2', level.offX + l.x2*level.grid); line.setAttribute('y2', level.offY + l.y2*level.grid);
+                        line.setAttribute('class', `divider-line div-${div.id}`);
+                        line.onclick = () => selectDivider(div);
+                        svg.appendChild(line);
+                    });
+                });
+            }
+
+            const overlay = document.getElementById('interactive-overlay');
+            const bbox = document.getElementById('canvas-container').getBoundingClientRect();
+            
+            // Render sides - Beautiful Squares outside the shape
+            level.sides.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'side-label';
+                
+                let svgX = level.offX + s.x*level.grid;
+                let svgY = level.offY + s.y*level.grid;
+                
+                // Push labels outside securely to avoid overlapping the line
+                let padding = 55; 
+                if(s.pos === 'top') svgY -= padding;
+                if(s.pos === 'bottom') svgY += padding;
+                if(s.pos === 'left') svgX -= padding;
+                if(s.pos === 'right') svgX += padding;
+
+                div.style.left = `${svgX * (bbox.width/SVG_W)}px`;
+                div.style.top = `${svgY * (bbox.height/SVG_H)}px`;
+                
+                if(s.type === 'missing') {
+                    const btn = document.createElement('button');
+                    btn.id = 'missing-btn-' + s.id;
+                    btn.className = 'side-input-btn animate-pulse relative z-20';
+                    btn.textContent = '?';
+                    btn.onclick = () => {
+                        // Bring this specific label to front when clicked
+                        document.querySelectorAll('.side-label').forEach(lbl => lbl.style.zIndex = '20');
+                        div.style.zIndex = '100';
+                        window.openAddHelper(btn, s);
+                    };
+                    div.appendChild(btn);
+                } else {
+                    const valDiv = document.createElement('div');
+                    valDiv.id = 'val-' + s.id;
+                    valDiv.className = 'val-display relative z-20';
+                    valDiv.textContent = s.val;
+                    div.appendChild(valDiv);
+                }
+                overlay.appendChild(div);
+            });
+            renderStars();
+        }
+
+        // --- Help & Cooldown ---
+        document.getElementById('toggle-help-btn').onclick = () => {
+            const btn = document.getElementById('toggle-help-btn');
+            
+            if (helpOnCooldown) {
+                playSound('step');
+                document.getElementById('buyout-modal').classList.remove('hidden');
+                return;
+            }
+
+            if (!helpEnabled && cur > 0) {
+                if (coins < 10) {
+                    playSound('error');
+                    showMsg("אין לכם מספיק מטבעות להפעלת העזרה! (עולה 10 מטבעות)", "red");
+                    return;
+                }
+                addCoins(-10);
+            }
+
+            helpEnabled = !helpEnabled;
+            playSound('step');
+            btn.classList.toggle('grayscale-0', helpEnabled);
+            document.getElementById('help-indicator').classList.toggle('hidden', !helpEnabled);
+
+            if (!helpEnabled) {
+                document.querySelectorAll('.highlight-parallel').forEach(e => e.classList.remove('highlight-parallel'));
+            }
+
+            if (cur > 0) {
+                if (helpEnabled) {
+                    showMsg("💡 העזרה הופעלה ל-15 שניות בלבד! נצלו אותה מהר.", "green");
+                    helpTimeoutId = setTimeout(() => {
+                        turnOffHelpAndCooldown(btn);
+                    }, 15000);
+                } else {
+                    clearTimeout(helpTimeoutId);
+                    turnOffHelpAndCooldown(btn);
+                }
+            }
+        };
+
+        function turnOffHelpAndCooldown(btn) {
+            helpEnabled = false;
+            btn.classList.remove('grayscale-0');
+            document.getElementById('help-indicator').classList.add('hidden');
+            document.querySelectorAll('.highlight-parallel').forEach(e => e.classList.remove('highlight-parallel'));
+            
+            helpOnCooldown = true;
+            cooldownSeconds = 20;
+            btn.style.opacity = '0.7';
+            
+            document.getElementById('help-icon-span').innerHTML = `<span class="text-xl">⏳${cooldownSeconds}</span>`;
+            document.getElementById('help-text-span').innerHTML = "דלג (-20)";
+            document.getElementById('help-text-span').classList.add('text-amber-600');
+            showMsg("העזרה כבויה ונחה. המתינו או לחצו כדי לדלג תמורת מטבעות! ⏳", "red");
+            
+            cooldownInterval = setInterval(() => {
+                cooldownSeconds--;
+                if(cooldownSeconds <= 0) {
+                    clearInterval(cooldownInterval);
+                    finishCooldown(btn);
+                } else {
+                    document.getElementById('help-icon-span').innerHTML = `<span class="text-xl">⏳${cooldownSeconds}</span>`;
+                }
+            }, 1000);
+        }
+
+        window.buyoutCooldown = () => {
+            if(coins >= 20) {
+                addCoins(-20);
+                playSound('tada');
+                document.getElementById('buyout-modal').classList.add('hidden');
+                clearInterval(cooldownInterval);
+                finishCooldown(document.getElementById('toggle-help-btn'));
+            } else {
+                playSound('error');
+                showMsg("אין לכם מספיק מטבעות לדילוג! נדרשים 20 מטבעות.", "red");
+                document.getElementById('buyout-modal').classList.add('hidden');
+            }
+        };
+
+        function finishCooldown(btn) {
+            helpOnCooldown = false;
+            btn.style.opacity = '1';
+            document.getElementById('help-icon-span').innerHTML = '<svg class="w-6 h-6"><use href="#icon-bulb"></use></svg>';
+            document.getElementById('help-text-span').innerHTML = "עזרה (10)";
+            document.getElementById('help-text-span').classList.remove('text-amber-600');
+            showMsg("העזרה נחה ומוכנה לפעולה! 💡", "green");
+            setTimeout(() => document.getElementById('status-msg').classList.add('hidden'), 3000);
+        }
+
+        function getParallelParts(side, level) {
+            if (side.parts && side.parts.length > 0) return { parts: side.parts, op: side.op || '+' };
+            const isHorizontal = (side.pos === 'top' || side.pos === 'bottom');
+            let parallels = level.sides.filter(s =>
+                s.id !== side.id && !s.type &&
+                ((isHorizontal && (s.pos === 'top' || s.pos === 'bottom')) ||
+                 (!isHorizontal && (s.pos === 'left' || s.pos === 'right')))
+            );
+
+            if (parallels.length >= 2) {
+                for(let i=0; i<parallels.length; i++) {
+                    for(let j=i+1; j<parallels.length; j++) {
+                        if (parallels[i].val + parallels[j].val === side.correct) return { parts: [parallels[i].id, parallels[j].id], op: '+' };
+                        if (Math.abs(parallels[i].val - parallels[j].val) === side.correct) {
+                            if (parallels[i].val > parallels[j].val) return { parts: [parallels[i].id, parallels[j].id], op: '-' };
+                            else return { parts: [parallels[j].id, parallels[i].id], op: '-' };
+                        }
+                    }
+                }
+                return { parts: [parallels[0].id, parallels[1].id], op: '+' };
+            } else if (parallels.length === 1) {
+                return { parts: [parallels[0].id], op: '=' };
+            }
+            return null; 
+        }
+
+        // --- BULLETPROOF POPUP CALCULATOR (WITH CLASSIC SQUARES + COINS + LTR) ---
+        window.openAddHelper = (el, sideObj) => {
+            document.querySelectorAll('.add-helper').forEach(e => e.remove());
+            document.querySelectorAll('.highlight-parallel').forEach(e => e.classList.remove('highlight-parallel'));
+
+            playSound('step');
+            const side = sideObj;
+            const level = getLevel(cur);
+            
+            const detected = getParallelParts(side, level);
+            let partsArr = detected ? detected.parts : [];
+            let opStr = detected ? detected.op : '+';
+
+            if (!partsArr || partsArr.length === 0) {
+                partsArr = ['fallback_1', 'fallback_2']; 
+                opStr = '+';
+            }
+
+            if(helpEnabled && partsArr.length > 0) {
+                partsArr.forEach(pid => {
+                    if (pid.startsWith('fallback')) return;
+                    const pel = document.getElementById('val-' + pid);
+                    if(pel) pel.classList.add('highlight-parallel');
+                });
+            }
+
+            const cleanupFn = () => {
+                document.querySelectorAll('.highlight-parallel').forEach(e => e.classList.remove('highlight-parallel'));
+            };
+
+            const helper = document.createElement('div');
+            const bbox = document.getElementById('canvas-container').getBoundingClientRect();
+            const relY = el.parentElement.offsetTop / bbox.height;
+            const relX = el.parentElement.offsetLeft / bbox.width;
+            
+            let posClass = 'helper-top';
+            if(relY < 0.2) posClass = 'helper-bottom';
+            else if(relX < 0.2) posClass = 'helper-right';
+            else if(relX > 0.8) posClass = 'helper-left';
+            
+            // IMPORTANT: dir="ltr" ensures the equation goes strictly from left to right!
+            helper.className = `add-helper ${posClass}`;
+            helper.dir = 'ltr'; 
+            
+            const closeX = document.createElement('div'); closeX.className = 'close-x'; closeX.textContent = '✕';
+            closeX.onclick = (ev) => { ev.stopPropagation(); cleanupFn(); helper.remove(); };
+            helper.appendChild(closeX);
+
+            // Create squares container (LTR direction)
+            const partsContainer = document.createElement('div');
+            partsContainer.className = 'flex items-center gap-2';
+            
+            partsArr.forEach((pid, i) => {
+                const ps = level.sides.find(x => x.id === pid);
+                const btn = document.createElement('button');
+                
+                let actualVal = ps ? (ps.type === 'missing' ? ps.correct : ps.val) : '?';
+                let isRevealed = (helpEnabled && ps && !ps.type);
+                let isPartUnknown = ps && ps.type === 'missing';
+
+                if (!isPartUnknown || isRevealed) {
+                    // Solid green square for known sides
+                    btn.className = 'w-14 h-14 flex items-center justify-center bg-green-100 border-2 border-green-500 rounded-xl shadow-sm text-green-800 font-black text-2xl cursor-default';
+                    btn.innerHTML = `<span>${actualVal}</span>`;
+                } else {
+                    // Dashed gray square WITH COIN ICON for unknown sides
+                    btn.className = 'w-14 h-14 flex flex-col items-center justify-center bg-slate-50 border-2 border-dashed border-slate-400 rounded-xl hover:border-amber-400 hover:bg-amber-50 transition-all shadow-sm cursor-pointer group relative';
+                    btn.innerHTML = `
+                        <span class="font-black text-2xl text-slate-400 group-hover:hidden">?</span>
+                        <div class="hidden group-hover:flex flex-col items-center justify-center absolute inset-0">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="drop-shadow-sm"><circle cx="12" cy="12" r="10" fill="#FBBF24" stroke="#B45309" stroke-width="2"/><path d="M12 6V18M8 10H16M8 14H16" stroke="#B45309" stroke-width="2" stroke-linecap="round"/></svg>
+                            <span class="text-[14px] font-black text-amber-700 leading-none mt-0.5">-2</span>
+                        </div>
+                    `;
+                    btn.onclick = (e) => {
+                        e.preventDefault();
+                        if (coins >= 2) {
+                            addCoins(-2);
+                            playSound('success');
+                            btn.className = 'w-14 h-14 flex items-center justify-center bg-green-100 border-2 border-green-500 rounded-xl shadow-sm text-green-800 font-black text-2xl cursor-default animate-bounce';
+                            btn.innerHTML = `<span>${actualVal}</span>`;
+                            btn.onclick = null;
+                            
+                            // Reveal this square completely on the game board!
+                            if (ps) {
+                                ps.type = null;
+                                ps.val = actualVal;
+                                const perimeterBtn = document.getElementById('missing-btn-' + pid);
+                                if (perimeterBtn) {
+                                    const newDiv = document.createElement('div');
+                                    newDiv.id = 'val-' + pid;
+                                    newDiv.className = 'val-display relative z-20 highlight-parallel !bg-green-100 !border-green-500 !text-green-800';
+                                    newDiv.textContent = actualVal;
+                                    perimeterBtn.replaceWith(newDiv);
+                                    setTimeout(() => newDiv.classList.remove('highlight-parallel'), 2000);
+                                }
+                            }
+                        } else {
+                            showMsg('אין מספיק מטבעות! פתיחת ריבוע עולה 2 מטבעות.', 'red');
+                            playSound('error');
+                        }
+                    };
+                }
+                
+                partsContainer.appendChild(btn);
+                
+                // Add operator +, -, etc.
+                if(i < partsArr.length - 1) {
+                    const opSpan = document.createElement('span'); 
+                    opSpan.className = 'font-black text-3xl text-slate-500 px-1'; 
+                    let currentOp = Array.isArray(opStr) ? opStr[i] : opStr;
+                    opSpan.textContent = currentOp || '+';
+                    partsContainer.appendChild(opSpan);
+                }
+            });
+            
+            // Add equals sign
+            const eqSpan = document.createElement('span'); 
+            eqSpan.className = 'font-black text-3xl text-blue-600 px-1'; 
+            eqSpan.textContent = '=';
+            partsContainer.appendChild(eqSpan);
+            
+            // Total Input
+            const total = document.createElement('input'); 
+            total.type = 'number'; total.className = 'total-v shadow-sm'; 
+            total.placeholder = "?"; 
+            
+            const vBtn = document.createElement('button');
+            vBtn.className = 'bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-xl font-black text-2xl transition btn-3d shadow-md border-blue-800 flex-shrink-0 flex items-center justify-center';
+            vBtn.textContent = 'V';
+            
+            vBtn.onclick = () => {
+                if(side.type === 'missing') confirmSide(helper, side, cleanupFn, el.parentElement);
+                else { playSound('step'); cleanupFn(); helper.remove(); }
+            };
+
+            total.onkeydown = (e) => { if(e.key === 'Enter') vBtn.click(); };
+
+            // Assemble everything explicitly left to right
+            helper.appendChild(partsContainer);
+            helper.appendChild(total);
+            helper.appendChild(vBtn);
+            
+            el.parentElement.appendChild(helper);
+            setTimeout(() => total.focus(), 50);
+        };
+
+        function confirmSide(helper, side, cleanupFn, container) {
+            const totalInp = helper.querySelector('.total-v');
+            const val = parseInt(totalInp.value);
+            
+            if(val === side.correct) {
+                playSound('success');
+                addCoins(10);
+                
+                side.type = null;
+                side.val = val;
+
+                // Create the newly revealed side label
+                const newDiv = document.createElement('div');
+                newDiv.id = 'val-' + side.id;
+                newDiv.className = 'val-display relative z-20 !bg-green-100 !border-green-500 !text-green-800';
+                newDiv.textContent = val;
+                
+                // Clear the container (removes the ? button and the popup bubble)
+                container.innerHTML = '';
+                container.appendChild(newDiv);
+                
+                cleanupFn();
+                document.getElementById('status-msg').classList.add('hidden'); 
+            } else {
+                playSound('error');
+                totalInp.classList.add('shake-err'); setTimeout(()=>totalInp.classList.remove('shake-err'), 400);
+            }
+        }
+
+        async function startWalk(type) {
+            if(isWalking) return;
+            const level = getLevel(cur);
+            if(document.querySelectorAll('.side-input-btn').length > 0) {
+                playSound('error');
+                return showMsg("גלו קודם את כל הצלעות החסרות עם סימני השאלה!", "red");
+            }
+            isWalking = true;
+            const walker = document.getElementById('knight-walker');
+            const bubble = document.getElementById('knight-bubble');
+            const bbox = document.getElementById('canvas-container').getBoundingClientRect();
+            const px = (x) => (level.offX + x*level.grid)*(bbox.width/SVG_W);
+            const py = (y) => (level.offY + y*level.grid)*(bbox.height/SVG_H);
+
+            if(type === 'perimeter') {
+                walker.classList.remove('hidden');
+                let sum = 0;
+                const pInputs = document.getElementById('p-inputs');
+                pInputs.innerHTML = '<div class="text-slate-400 text-sm font-bold w-full text-right mb-2" dir="rtl">מספרים שנאספו בטיול:</div>';
+                
+                for(let i=0; i<level.points.length; i++) {
+                    playSound('step');
+                    const p1 = level.points[i]; const p2 = level.points[(i+1)%level.points.length];
+                    const len = (level.sides[i] && level.sides[i].val) ? level.sides[i].val : Math.round(Math.sqrt(Math.pow(p1[0]-p2[0],2) + Math.pow(p1[1]-p2[1],2)));
+                    walker.style.transition = i === 0 ? 'none' : 'left 0.8s linear, top 0.8s linear';
+                    walker.style.left = `${px(p2[0])}px`; walker.style.top = `${py(p2[1])}px`;
+                    
+                    if (i === 0) {
+                        bubble.innerHTML = `אורך צלע ראשונה:<br><b class="text-3xl text-indigo-700">${len}</b>`;
+                        sum += len;
+                        await new Promise(r => setTimeout(r, 1500));
+                    } else {
+                        if (helpEnabled) {
+                            bubble.innerHTML = `<span dir="ltr">${sum} + ${len}</span> = <b>${sum+len}</b>`;
+                            await new Promise(r => setTimeout(r, 1200));
+                            sum += len;
+                        } else {
+                            bubble.innerHTML = `<span dir="ltr">${sum} + ${len}</span> = <br><div class="mt-2 flex items-center justify-center gap-1"><input type="number" id="walk-inp" class="walk-inp-style border-indigo-500" onkeydown="if(event.key==='Enter') window.checkWalkStep(${sum+len})"> <button onclick="window.checkWalkStep(${sum+len})" class="walk-btn-style">V</button></div>`;
+                            setTimeout(() => document.getElementById('walk-inp')?.focus(), 50); 
+                            await new Promise(resolve => { walkStepResolver = resolve; });
+                            sum += len;
+                        }
+                    }
+
+                    const box = document.createElement('div'); box.className = 'perimeter-box'; box.textContent = len;
+                    pInputs.appendChild(box);
+                    if(i < level.points.length - 1) {
+                        const plus = document.createElement('span'); plus.className='font-black text-blue-400 text-xl'; plus.textContent='+';
+                        pInputs.appendChild(plus);
+                    }
+                }
+                
+                playSound('success');
+                let centerX = 0, centerY = 0;
+                level.points.forEach(p => { centerX += p[0]; centerY += p[1]; });
+                centerX /= level.points.length; centerY /= level.points.length;
+                walker.style.left = `${px(centerX)}px`; walker.style.top = `${py(centerY)}px`;
+                bubble.innerHTML = `הגענו לסוף! <br>עכשיו הקלידו את התשובה הסופית למטה.`;
+                setTimeout(() => { walker.classList.add('hidden'); isWalking = false; }, 3000);
+            
+            } else if (type === 'area') {
+                if(!activeDivId && level.dividers && level.dividers.length > 0) {
+                    playSound('error');
+                    isWalking = false;
+                    return showMsg("לחצו על אחד מהקווים הכתומים המקווקווים כדי לחלק את הצורה!", "red");
+                }
+                walker.classList.remove('hidden');
+                const list = (level.dividers && level.dividers.length > 0) ? level.dividers.find(d=>d.id === activeDivId).rects : level.rects;
+                
+                for(let i=0; i<list.length; i++) {
+                    playSound('step');
+                    const r = list[i];
+                    walker.style.transition = 'left 0.8s ease-in-out, top 0.8s ease-in-out';
+                    walker.style.left = `${px(r.labelX)}px`; walker.style.top = `${py(r.labelY)}px`;
+                    
+                    if (helpEnabled) {
+                        bubble.innerHTML = `מלבן ${i+1}:<br><div class="flex items-center gap-1 justify-center mt-2" dir="ltr"><span class="font-black text-xl">${r.w} × ${r.h} = </span><input type="number" id="walk-area-inp" class="walk-inp-style border-emerald-500 w-16" onkeydown="if(event.key==='Enter') window.checkWalkAreaStep(${r.w*r.h}, ${i})"> <button onclick="window.checkWalkAreaStep(${r.w*r.h}, ${i})" class="walk-btn-style bg-emerald-500 border-emerald-800">V</button></div>`;
+                    } else {
+                        const wandName = STORIES[selectedStoryId].wandName || "קסם";
+                        bubble.innerHTML = `מלבן ${i+1}: <button onclick="if(coins>=5) { addCoins(-5); window.checkWalkAreaStepFull(${r.w*r.h}, ${i}); this.style.display='none'; } else { showMsg('אין מספיק מטבעות לקסם!', 'red'); playSound('error'); }" class="bg-amber-100 border border-amber-400 rounded-lg px-2 py-1 text-xs hover:bg-amber-200 transition mb-1 font-bold shadow-sm" title="גלה שטח (-5 מטבעות)"><svg class="w-3 h-3 text-amber-500 inline drop-shadow-sm mr-1"><use href="#icon-coin"></use></svg>🪄 ${wandName} (-5)</button><br><div class="flex items-center gap-1 justify-center mt-2" dir="ltr"><span class="font-bold text-emerald-800 text-sm">שטח:</span> <input type="number" id="walk-area-inp" class="walk-inp-style border-emerald-500 w-16" placeholder="?" onkeydown="if(event.key==='Enter') window.checkWalkAreaStepFull(${r.w*r.h}, ${i})"> <button onclick="window.checkWalkAreaStepFull(${r.w*r.h}, ${i})" class="walk-btn-style bg-emerald-500 border-emerald-800 px-3">V</button></div>`;
+                    }
+                    
+                    setTimeout(() => document.getElementById('walk-area-inp')?.focus(), 50);
+                    await new Promise(resolve => { walkStepResolver = resolve; });
+                }
+                
+                playSound('success');
+                let cx = 0, cy = 0;
+                level.points.forEach(p => { cx += p[0]; cy += p[1]; });
+                cx /= level.points.length; cy /= level.points.length;
+                walker.style.left = `${px(cx)}px`; walker.style.top = `${py(cy)}px`;
+                bubble.innerHTML = `מעולה! עכשיו חברו הכל<br>והקלידו את השטח הכולל למטה.`;
+                setTimeout(() => { walker.classList.add('hidden'); isWalking = false; }, 3000);
+            }
+        }
+
+        window.checkWalkStep = (correctSum) => {
+            const inp = document.getElementById('walk-inp');
+            if(!inp) return;
+            if(parseInt(inp.value) === correctSum) {
+                playSound('success');
+                addCoins(5);
+                if(walkStepResolver) { let res = walkStepResolver; walkStepResolver = null; res(); }
+            } else {
+                playSound('error');
+                inp.classList.add('shake-err'); inp.value = '';
+                setTimeout(() => inp.classList.remove('shake-err'), 400);
+            }
+        };
+
+        window.checkWalkAreaStep = (correctArea, rectIndex) => {
+            const inp = document.getElementById('walk-area-inp'); if(!inp) return;
+            const val = parseInt(inp.value);
+            if(val === correctArea) {
+                playSound('success'); addCoins(15);
+                inp.classList.remove('border-emerald-500'); inp.classList.add('border-green-500', 'bg-green-100', 'text-green-800'); inp.disabled = true;
+                const subInput = document.getElementById(`sub-${rectIndex}`); if(subInput) { subInput.value = correctArea; subInput.classList.add('bg-green-100'); }
+                const shapeInput = document.getElementById(`shape-area-inp-${rectIndex}`); if(shapeInput) { shapeInput.value = correctArea; shapeInput.classList.add('bg-green-100', 'border-green-500', 'text-green-800'); }
+                setTimeout(() => { if(walkStepResolver) { let res = walkStepResolver; walkStepResolver = null; res(); } }, 400);
+            } else {
+                playSound('error');
+                inp.classList.add('shake-err'); inp.value = ''; setTimeout(() => inp.classList.remove('shake-err'), 400);
+            }
+        };
+
+        window.checkWalkAreaStepFull = (correctArea, rectIndex) => {
+            const aInp = document.getElementById('walk-area-inp');
+            if (!aInp) return;
+            let aVal = parseInt(aInp.value) || correctArea; 
+            let areaCorrect = (aVal === correctArea);
+
+            if(areaCorrect) {
+                playSound('success'); addCoins(15);
+                aInp.value = correctArea;
+                aInp.classList.remove('border-emerald-500'); aInp.classList.add('border-green-500', 'bg-green-100');
+                aInp.disabled = true;
+                const subInput = document.getElementById(`sub-${rectIndex}`);
+                if(subInput) {
+                    subInput.value = correctArea; subInput.classList.add('bg-green-100');
+                }
+                const shapeInput = document.getElementById(`shape-area-inp-${rectIndex}`); if(shapeInput) { shapeInput.value = correctArea; shapeInput.classList.add('bg-green-100', 'border-green-500', 'text-green-800'); }
+                
+                const container = document.getElementById(`area-calc-container-${rectIndex}`);
+                if(container) {
+                    container.innerHTML = `
+                        <div class="bg-green-100 border-2 border-green-500 text-green-800 font-black px-4 py-1.5 rounded-full shadow-sm text-sm flex items-center gap-2 cursor-default mx-auto w-max transition-all transform hover:scale-105">
+                            <span>שטח: ${correctArea}</span>
+                            <span>✅</span>
+                        </div>
+                    `;
+                }
+
+                setTimeout(() => { if(walkStepResolver) { let res = walkStepResolver; walkStepResolver = null; res(); } }, 400);
+            } else {
+                playSound('error');
+                aInp.classList.add('shake-err'); aInp.value='';
+                setTimeout(() => { aInp.classList.remove('shake-err'); }, 400);
+            }
+        };
+
+        window.closeInlineArea = (i, w, h) => {
+            playSound('step');
+            const container = document.getElementById(`area-calc-container-${i}`);
+            if (!container) return;
+            container.innerHTML = `
+                <button onclick="openInlineArea(${i}, ${w}, ${h})" class="area-start-btn bg-white/95 hover:bg-emerald-50 text-emerald-800 font-bold py-1.5 px-4 rounded-full shadow-md border-2 border-emerald-400 text-sm flex items-center gap-2 transition-transform transform hover:scale-105">
+                    <span>🔍</span> שטח מלבן ${i+1}
+                </button>
+            `;
+        };
+
+        window.openInlineArea = (i, w, h, useWand = false) => {
+            playSound('step');
+            const container = document.getElementById(`area-calc-container-${i}`);
+            if (!container) return;
+            
+            let areaVal = useWand ? (w * h) : '';
+            let readonlyAttr = useWand ? 'readonly' : '';
+            let wandName = STORIES[selectedStoryId].wandName || "קסם";
+
+            let wandBtnHtml = useWand ? '' : `
+                <button onclick="if(coins>=5){ addCoins(-5); openInlineArea(${i}, ${w}, ${h}, true); } else { showMsg('אין מספיק מטבעות לקסם!', 'red'); playSound('error'); }" class="bg-amber-100 hover:bg-amber-200 text-amber-800 rounded px-2 py-1 font-bold text-[11px] border border-amber-300 shadow-sm transition active:scale-95 flex items-center gap-1 mb-1 absolute -top-5 right-0 whitespace-nowrap" title="גלה שטח (-5 מטבעות)">
+                    <svg class="w-3 h-3 text-amber-500 drop-shadow-sm"><use href="#icon-coin"></use></svg> 🪄 ${wandName} (-5)
+                </button>
+            `;
+
+            container.innerHTML = `
+                <div class="flex items-center justify-center gap-2 bg-white/95 backdrop-blur rounded-xl border-2 border-emerald-500 pl-2 pr-3 py-1.5 shadow-xl w-max mx-auto relative mt-4">
+                    <button onclick="closeInlineArea(${i}, ${w}, ${h})" class="absolute -top-3 -left-3 bg-rose-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-black border-2 border-white shadow-md hover:bg-rose-600 transition z-50">✕</button>
+                    
+                    ${wandBtnHtml}
+
+                    <div class="flex items-center gap-1" dir="rtl">
+                        <span class="font-bold text-emerald-800 text-sm">שטח:</span>
+                        <input type="number" id="shape-area-inp-${i}" class="w-16 h-8 text-center font-black text-emerald-700 text-base outline-none bg-emerald-50 rounded border border-emerald-200 focus:bg-white focus:border-emerald-500 transition-colors" placeholder="?" value="${areaVal}" ${readonlyAttr} onkeydown="if(event.key==='Enter') checkInlineAreaFull(${i}, ${w}, ${h}, ${w*h})">
+                    </div>
+                    
+                    <button onclick="checkInlineAreaFull(${i}, ${w}, ${h}, ${w*h})" class="bg-emerald-500 text-white rounded w-8 h-8 font-black text-base hover:bg-emerald-600 transition-transform active:scale-95 flex items-center justify-center shadow-sm border-b-2 border-emerald-700 active:border-b-0 active:translate-y-px z-10 relative">V</button>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                const targetInp = document.getElementById(`shape-area-inp-${i}`);
+                if(targetInp && !useWand) targetInp.focus();
+                else if (useWand) checkInlineAreaFull(i, w, h, w*h);
+            }, 50);
+        };
+
+        window.checkInlineAreaFull = (rectIndex, correctW, correctH, correctArea) => {
+            const aInp = document.getElementById(`shape-area-inp-${rectIndex}`);
+            if (!aInp) return;
+            let aVal = parseInt(aInp.value);
+            let areaCorrect = (aVal === correctArea);
+
+            if(areaCorrect) {
+                playSound('success'); 
+                addCoins(15);
+                
+                const container = document.getElementById(`area-calc-container-${rectIndex}`);
+                if(container) {
+                    container.innerHTML = `
+                        <div class="bg-green-100 border-2 border-green-500 text-green-800 font-black px-4 py-1.5 rounded-full shadow-sm text-sm flex items-center gap-2 cursor-default mx-auto w-max transition-all transform hover:scale-105">
+                            <span>שטח: ${correctArea}</span>
+                            <span>✅</span>
+                        </div>
+                    `;
+                }
+
+                const subInput = document.getElementById(`sub-${rectIndex}`); 
+                if(subInput) { 
+                    subInput.value = correctArea; 
+                    subInput.classList.add('bg-green-100'); 
+                }
+            } else {
+                playSound('error');
+                aInp.classList.add('shake-err'); aInp.value='';
+                setTimeout(() => { aInp.classList.remove('shake-err'); }, 400);
+            }
+        };
+
+        function selectDivider(div) {
+            playSound('step');
+            document.getElementById('status-msg').classList.add('hidden');
+            
+            if(activeDivId === div.id && div.id !== 'dummy') return;
+            activeDivId = div.id;
+            
+            document.querySelectorAll('.divider-line').forEach(l => {
+                l.classList.remove('divider-active');
+            });
+            document.querySelectorAll(`.div-${div.id}`).forEach(l => {
+                l.classList.add('divider-active');
+            });
+
+            const level = getLevel(cur);
+            const rectGroup = document.getElementById('area-rects-group');
+            if(rectGroup) {
+                rectGroup.innerHTML = '';
+                if(div.rects) {
+                    div.rects.forEach((r, i) => {
+                        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                        rect.setAttribute('x', level.offX + r.x*level.grid);
+                        rect.setAttribute('y', level.offY + r.y*level.grid);
+                        rect.setAttribute('width', (r.w || 0)*level.grid);
+                        rect.setAttribute('height', (r.h || 0)*level.grid);
+                        rect.setAttribute('fill', r.fill || '#e0f2fe');
+                        rect.setAttribute('opacity', '0.8');
+                        rectGroup.appendChild(rect);
+
+                        if(r.labelX && r.labelY) {
+                            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                            text.setAttribute('x', level.offX + r.labelX*level.grid);
+                            text.setAttribute('y', level.offY + r.labelY*level.grid - 30);
+                            text.setAttribute('text-anchor', 'middle');
+                            text.setAttribute('dominant-baseline', 'middle');
+                            text.setAttribute('font-
