@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ממלכת הגיאומטריה של גלי - גרסה 13.0</title>
+    <title>ממלכת הגיאומטריה של גלי</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -14,8 +14,8 @@
         input[type=number] { -moz-appearance: textfield; appearance: none; }
 
         /* Perimeter labels and buttons */
-        .side-input-btn { width: 44px; height: 44px; text-align: center; font-size: 24px; border: 3px solid #94a3b8; border-bottom-width: 5px; border-radius: 12px; background: white; font-weight: 900; cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 6px rgba(0,0,0,0.15); color: #334155; display: flex; align-items: center; justify-content: center; }
-        .side-input-btn:active { transform: translateY(3px); border-bottom-width: 2px; }
+        .side-input-btn { width: 38px; height: 38px; text-align: center; font-size: 20px; border: 3px solid #94a3b8; border-bottom-width: 4px; border-radius: 10px; background: white; font-weight: 900; cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 6px rgba(0,0,0,0.15); color: #334155; display: flex; align-items: center; justify-content: center; }
+        .side-input-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
         .side-input-btn:hover { border-color: #3b82f6; color: #2563eb; background: #eff6ff;}
         
         .btn-3d { border-bottom-width: 6px; transition: all 0.1s; position: relative; top: 0; }
@@ -25,37 +25,34 @@
         .divider-active { stroke-dasharray: 0; opacity: 1 !important; stroke: #ea580c; stroke-width: 5 !important; z-index: 10; }
         
         .side-label { position: absolute; transform: translate(-50%, -50%); z-index: 20; pointer-events: auto; display: flex; align-items: center; justify-content: center; }
-        .val-display { background: rgba(255, 255, 255, 0.9); border: 2px solid #94a3b8; border-bottom-width: 3px; padding: 0 10px; height: 34px; min-width: 34px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; color: #0f172a; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 18px; cursor: default; backdrop-filter: blur(4px); }
-        .highlight-parallel { box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.6) !important; border-color: #ec4899 !important; background-color: rgba(252, 231, 243, 0.9) !important; color: #be185d !important; transform: scale(1.1); z-index: 40 !important; transition: all 0.3s ease; }
+        .val-display { background: rgba(255, 255, 255, 0.95); border: 2px solid #94a3b8; border-bottom-width: 3px; padding: 0 8px; height: 30px; min-width: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; color: #0f172a; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 16px; cursor: default; backdrop-filter: blur(4px); }
+        .highlight-parallel { box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.8) !important; border-color: #ec4899 !important; background-color: rgba(252, 231, 243, 0.95) !important; color: #be185d !important; transform: scale(1.15); z-index: 40 !important; transition: all 0.3s ease; }
 
-        /* Popup Equation Calculator */
-        .add-helper { position: absolute; background: #fff; border: 4px solid #3b82f6; border-radius: 20px; padding: 12px 16px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); z-index: 200; white-space: nowrap; width: max-content; max-width: 90vw; }
-        .add-helper input.total-v { width: 56px; height: 56px; border: 3px solid #60a5fa; background: #eff6ff; border-radius: 12px; text-align: center; font-weight: 900; outline: none; font-size: 24px; color: #1e3a8a; transition: transform 0.2s; margin-left: 4px; }
+        /* Popup Equation Calculator - Small & Compact */
+        .add-helper { position: absolute; background: #fff; border: 3px solid #3b82f6; border-radius: 16px; padding: 10px 12px; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); z-index: 200; white-space: nowrap; width: max-content; max-width: 90vw; }
+        .add-helper input.total-v { width: 44px; height: 40px; border: 2px solid #60a5fa; background: #eff6ff; border-radius: 8px; text-align: center; font-weight: 900; outline: none; font-size: 18px; color: #1e3a8a; transition: transform 0.2s; margin-left: 2px; }
         .add-helper input.total-v:focus { border-color: #2563eb; background: white; transform: scale(1.05); }
+        .eq-box-small { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; font-size: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: default; }
         
         /* Animations */
-        .helper-top { bottom: 100%; left: 50%; transform: translate(-50%, -15px); animation: popInTop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .helper-bottom { top: 100%; left: 50%; transform: translate(-50%, 15px); animation: popInBottom 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .helper-left { right: 100%; top: 50%; transform: translate(-15px, -50%); animation: popInLeft 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .helper-right { left: 100%; top: 50%; transform: translate(15px, -50%); animation: popInRight 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .helper-top { bottom: 100%; left: 50%; transform: translate(-50%, -10px); animation: popInTop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .helper-bottom { top: 100%; left: 50%; transform: translate(-50%, 10px); animation: popInBottom 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .helper-left { right: 100%; top: 50%; transform: translate(-10px, -50%); animation: popInLeft 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .helper-right { left: 100%; top: 50%; transform: translate(10px, -50%); animation: popInRight 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
-        @keyframes popInTop { from { transform: translate(-50%, 0) scale(0.5); opacity: 0; } to { transform: translate(-50%, -15px) scale(1); opacity: 1; } }
-        @keyframes popInBottom { from { transform: translate(-50%, 0) scale(0.5); opacity: 0; } to { transform: translate(-50%, 15px) scale(1); opacity: 1; } }
-        @keyframes popInLeft { from { transform: translate(0, -50%) scale(0.5); opacity: 0; } to { transform: translate(-15px, -50%) scale(1); opacity: 1; } }
-        @keyframes popInRight { from { transform: translate(0, -50%) scale(0.5); opacity: 0; } to { transform: translate(15px, -50%) scale(1); opacity: 1; } }
+        @keyframes popInTop { from { transform: translate(-50%, 0) scale(0.5); opacity: 0; } to { transform: translate(-50%, -10px) scale(1); opacity: 1; } }
+        @keyframes popInBottom { from { transform: translate(-50%, 0) scale(0.5); opacity: 0; } to { transform: translate(-50%, 10px) scale(1); opacity: 1; } }
+        @keyframes popInLeft { from { transform: translate(0, -50%) scale(0.5); opacity: 0; } to { transform: translate(-10px, -50%) scale(1); opacity: 1; } }
+        @keyframes popInRight { from { transform: translate(0, -50%) scale(0.5); opacity: 0; } to { transform: translate(10px, -50%) scale(1); opacity: 1; } }
 
         .progress-bar-inner { transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
         #welcome-modal, #success-modal, #report-modal, #library-modal, #instructions-modal, #buyout-modal, #editor-modal { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); z-index: 400; }
         
-        .walk-inp-style { width: 60px; height: 36px; border: 2px solid #818cf8; border-bottom-width: 4px; border-radius: 8px; text-align: center; font-weight: 800; outline: none; color: #1e3a8a; margin: 0 4px; font-size: 16px; transition: all 0.1s;}
-        .walk-btn-style { background: #4f46e5; color: white; border-radius: 8px; border-bottom: 4px solid #3730a3; padding: 0 12px; height: 36px; font-weight: bold; margin-right: 4px; cursor: pointer; font-size: 15px; transition: all 0.1s;}
-        .walk-btn-style:active { transform: translateY(2px); border-bottom-width: 2px; }
-
         .perimeter-box { width: 42px; height: 42px; border: 2.5px solid #3b82f6; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; background: #eff6ff; color: #1e40af; animation: popIn 0.3s ease-out; font-size: 18px; box-shadow: 0 4px 6px rgba(59,130,246,0.2); }
         @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .scratchpad { position: fixed; bottom: 20px; left: 20px; z-index: 150; display: flex; flex-direction: column; align-items: flex-start; }
-        .close-x { position: absolute; top: -14px; left: -14px; width: 32px; height: 32px; background: #ef4444; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; border: 3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 110; transition: transform 0.2s; font-size: 16px; }
+        .close-x { position: absolute; top: -10px; left: -10px; width: 28px; height: 28px; background: #ef4444; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 110; transition: transform 0.2s; font-size: 12px; }
         .close-x:hover { background: #dc2626; transform: scale(1.1); }
         
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
@@ -67,29 +64,10 @@
         .diff-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .diff-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
 
-        /* Walker modifications for line walking */
-        #knight-walker { 
-            position: absolute;
-            z-index: 150;
-            transform: translate(-50%, -100%); 
-            filter: drop-shadow(0 8px 8px rgba(0,0,0,0.4));
-        }
-        #walker-char {
-            display: block;
-            font-size: 48px;
-            line-height: 1;
-        }
-        #knight-bubble { 
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-bottom: 15px; 
-            min-width: 240px; 
-            max-width: 340px;
-            white-space: normal; 
-            break-inside: avoid; 
-        }
+        /* Walker */
+        #knight-walker { position: absolute; z-index: 150; transform: translate(-50%, -100%); filter: drop-shadow(0 8px 8px rgba(0,0,0,0.4)); }
+        #walker-char { display: block; font-size: 48px; line-height: 1; }
+        #knight-bubble { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 15px; min-width: 220px; white-space: normal; break-inside: avoid; }
         
         .panel-3d { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255,255,255,0.8); }
 
@@ -124,10 +102,6 @@
 </head>
 <body class="min-h-screen flex flex-col items-center p-3 md:p-4 relative">
 
-    <div class="fixed bottom-3 left-3 text-white text-xs font-black z-50 pointer-events-none bg-blue-600 px-3 py-2 rounded-xl shadow-lg border-2 border-white">
-        גרסה 13.0 - כפתור חזרה למסך הראשי לבחירת סיפורים, ושמירת הסיפורים האישיים! 🏠
-    </div>
-
     <!-- Global SVGs -->
     <svg width="0" height="0" class="hidden">
         <symbol id="icon-coin" viewBox="0 0 24 24" fill="none">
@@ -154,7 +128,7 @@
                     <input type="text" id="player-name-input" class="w-full p-4 border-2 border-white rounded-2xl text-xl font-bold outline-none focus:ring-4 ring-blue-200 transition shadow-inner" placeholder="הקלידו שם כאן..." onkeydown="if(event.key==='Enter') document.getElementById('start-game-btn').click()">
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-purple-50 p-5 rounded-3xl border-2 border-purple-100 shadow-sm panel-3d">
+                    <div class="bg-purple-50 p-5 rounded-3xl border-2 border-purple-100 shadow-sm panel-3d relative">
                         <label class="block text-sm font-black text-purple-900 mb-2">בחירת עולם:</label>
                         <select id="story-select" class="w-full p-3 border-2 border-white rounded-2xl text-lg font-bold outline-none focus:ring-4 ring-purple-200 bg-white cursor-pointer shadow-sm">
                             <option value="class42" selected>🎒 משימת כיתה ד'2</option>
@@ -168,13 +142,16 @@
                             <option value="ninja">🥷 כפר הנינג'ות</option>
                             <option value="dino">🦖 פארק הדינוזאורים</option>
                         </select>
+                        <button onclick="openEditor()" class="mt-3 w-full bg-purple-200 hover:bg-purple-300 text-purple-800 font-bold py-2 rounded-xl text-sm transition flex justify-center items-center gap-2">
+                            <span>⚙️</span> עריכת העלילה והטקסטים
+                        </button>
                     </div>
                     <div class="bg-emerald-50 p-5 rounded-3xl border-2 border-emerald-100 shadow-sm panel-3d">
-                        <label class="block text-sm font-black text-emerald-900 mb-2">כמות שלבים:</label>
+                        <label class="block text-sm font-black text-emerald-900 mb-2">כמות שלבים במסע:</label>
                         <select id="levels-select" class="w-full p-3 border-2 border-white rounded-2xl text-lg font-bold bg-white cursor-pointer shadow-sm">
-                            <option value="auto" selected>לפי העלילה המלאה</option>
-                            <option value="3">משחק קצר (3 שלבים)</option>
-                            <option value="10">משחק ארוך (10 שלבים)</option>
+                            <option value="3" selected>3 שלבים (קצר וקולע)</option>
+                            <option value="6">6 שלבים (הרפתקה בינונית)</option>
+                            <option value="10">10 שלבים (מסע מלא וארוך!)</option>
                         </select>
                     </div>
                 </div>
@@ -192,10 +169,10 @@
                         <span>➕ בחירת סוגי צורות למסע</span>
                     </summary>
                     <div class="p-4 grid grid-cols-1 gap-3 bg-slate-50 border-t-2 border-slate-200">
-                        <label class="flex items-center justify-between p-3 bg-white border-2 border-blue-400 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-comp" checked class="w-6 h-6"><span class="font-black text-blue-900">צורות מורכבות (L, U, צלב, מדרגות)</span></label>
+                        <label class="flex items-center justify-between p-3 bg-white border-2 border-blue-400 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-comp" checked class="w-6 h-6"><span class="font-black text-blue-900">צורות מורכבות (L, U, מדרגות)</span></label>
                         <label class="flex items-center justify-between p-3 bg-white border-2 border-slate-200 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-simple" class="w-6 h-6"><span class="font-bold text-slate-700">מלבנים וריבועים פשוטים</span></label>
-                        <label class="flex items-center justify-between p-3 bg-white border-2 border-slate-200 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-triangles" class="w-6 h-6"><span class="font-bold text-slate-700">משולשים (ישר זווית, שווה צלעות)</span></label>
-                        <label class="flex items-center justify-between p-3 bg-white border-2 border-slate-200 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-quads" class="w-6 h-6"><span class="font-bold text-slate-700">מרובעים מיוחדים (טרפז, מעוין, מקבילית, דלתון)</span></label>
+                        <label class="flex items-center justify-between p-3 bg-white border-2 border-slate-200 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-triangles" class="w-6 h-6"><span class="font-bold text-slate-700">משולשים מכל הסוגים</span></label>
+                        <label class="flex items-center justify-between p-3 bg-white border-2 border-blue-400 rounded-xl cursor-pointer shadow-sm"><input type="checkbox" id="chk-quads" checked class="w-6 h-6"><span class="font-black text-blue-900">מרובעים מיוחדים (טרפז, מקבילית, מעוין)</span></label>
                     </div>
                 </details>
             </div>
@@ -219,7 +196,7 @@
                     <label class="block text-sm font-black text-indigo-900 mb-2">כמות שלבים בעלילה:</label>
                     <div class="flex items-center justify-start gap-3">
                         <button onclick="updateStageCount(-1)" class="w-10 h-10 bg-white border-2 border-indigo-300 rounded-lg font-black text-xl hover:bg-indigo-100 text-indigo-700 btn-3d shadow-sm">-</button>
-                        <span id="editor-stage-count" class="font-black text-2xl text-indigo-900 w-8 text-center bg-white rounded-lg p-1 shadow-inner border border-indigo-200">5</span>
+                        <span id="editor-stage-count" class="font-black text-2xl text-indigo-900 w-8 text-center bg-white rounded-lg p-1 shadow-inner border border-indigo-200">10</span>
                         <button onclick="updateStageCount(1)" class="w-10 h-10 bg-indigo-600 border-2 border-indigo-800 rounded-lg font-black text-xl hover:bg-indigo-700 text-white btn-3d shadow-sm">+</button>
                     </div>
                 </div>
@@ -247,8 +224,8 @@
                     <p class="text-base text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-blue-100 h-full">כדי למצוא היקף, יוצאים ל"טיול" מסביב לצורה. לחצו על כפתור "טיול היקף" והדמות תצעד במדויק על כל צלע!<br><strong class="text-rose-600 block mt-2">שימו לב!</strong> לפעמים חסרות צלעות (<code>?</code>). גלו אותן לפני הטיול.</p>
                 </div>
                 <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-200 panel-3d">
-                    <h3 class="text-2xl font-black text-emerald-800 mb-3 flex items-center gap-2">🟩 2. חישוב שטח מלבן</h3>
-                    <p class="text-base text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-emerald-100 h-full">כדי למצוא שטח, לוחצים על הלחצן "🔍 שטח מלבן" בתוך הצורה. ייפתח חלון קטן בו תראו את התרגיל ותוכלו להקליד את התוצאה הסופית שחישבתם.</p>
+                    <h3 class="text-2xl font-black text-emerald-800 mb-3 flex items-center gap-2">🟩 2. חישוב שטח</h3>
+                    <p class="text-base text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-emerald-100 h-full">כדי למצוא שטח של מלבן או צורה מורכבת, לוחצים על הלחצן "🔍 שטח מלבן". ייפתח חלון קטן בו תראו את התרגיל ותוכלו להקליד את התוצאה.</p>
                 </div>
                 <div class="bg-amber-50 p-5 rounded-2xl border-2 border-amber-200 panel-3d md:col-span-2">
                     <h3 class="text-2xl font-black text-amber-800 mb-3 flex items-center gap-2"><svg class="w-8 h-8 text-amber-500 inline mr-2"><use href="#icon-coin"></use></svg> 4. כלכלת המטבעות ורמזים</h3>
@@ -263,8 +240,8 @@
                         <div class="bg-white p-4 rounded-xl border border-amber-100">
                             <p class="font-black text-rose-600 mb-2 text-lg">מה קונים בזה?</p>
                             <ul class="list-disc list-inside text-slate-700 space-y-1 font-bold">
-                                <li><strong>עזרה מרחפת (<svg class="w-4 h-4 inline text-amber-500"><use href="#icon-bulb"></use></svg>):</strong> 10 <svg class="w-4 h-4 inline text-amber-500"><use href="#icon-coin"></use></svg> (מחיר זול במיוחד)</li>
-                                <li><strong>גילוי אוטומטי של צלע או שטח:</strong> בעזרת השרביטים המפוזרים במשחק - למי שנתקע!</li>
+                                <li><strong>עזרה מרחפת (<svg class="w-4 h-4 inline text-amber-500"><use href="#icon-bulb"></use></svg>):</strong> 10 <svg class="w-4 h-4 inline text-amber-500"><use href="#icon-coin"></use></svg></li>
+                                <li><strong>גילוי אוטומטי של צלע/שטח:</strong> באמצעות הכלי המיוחד של העולם שלכם! (למשל הסרגל 📏) - עולה קצת מטבעות למי שנתקע.</li>
                             </ul>
                         </div>
                     </div>
@@ -282,23 +259,74 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="bg-blue-50 p-5 rounded-2xl border-2 border-blue-200 panel-3d md:col-span-2">
                     <h3 class="text-2xl font-black text-blue-800 mb-3 flex items-center gap-2"><span class="text-3xl">📐</span> היקף לכל הצורות</h3>
-                    <p class="text-slate-700 mb-2 text-lg"><strong>היקף = סכום כל הצלעות החיצוניות של הצורה.</strong> פשוט מקיפים את הצורה ומחברים את האורכים.</p>
+                    <p class="text-slate-700 mb-2 text-lg"><strong>היקף = סכום כל הצלעות החיצוניות של הצורה.</strong> פשוט מקיפים את הצורה מבחוץ ומחברים את כל האורכים יחד.</p>
                 </div>
-                <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-200 panel-3d">
-                    <h3 class="text-xl font-black text-emerald-800 mb-3 flex items-center gap-2"><span class="text-2xl">🟩</span> מלבן וריבוע</h3>
-                    <p class="text-slate-700 mb-2 text-lg"><strong>שטח = אורך × רוחב</strong></p>
+                <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-200 panel-3d flex items-center gap-4">
+                    <svg width="80" height="60" viewBox="0 0 80 60" class="flex-shrink-0">
+                        <rect x="10" y="10" width="60" height="40" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+                        <text x="40" y="35" text-anchor="middle" font-size="12" font-weight="bold" fill="#0284c7">שטח</text>
+                        <text x="40" y="8" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">a (אורך)</text>
+                        <text x="-5" y="35" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a" transform="rotate(-90 5 35)">b (רוחב)</text>
+                    </svg>
+                    <div>
+                        <h3 class="text-xl font-black text-emerald-800 mb-1">מלבן וריבוע</h3>
+                        <p class="text-slate-700 text-lg">שטח = אורך × רוחב</p>
+                        <p class="text-emerald-700 font-black text-xl" dir="ltr">S = a × b</p>
+                    </div>
                 </div>
-                <div class="bg-cyan-50 p-5 rounded-2xl border-2 border-cyan-200 panel-3d">
-                    <h3 class="text-xl font-black text-cyan-800 mb-3 flex items-center gap-2"><span class="text-2xl">🔺</span> משולש</h3>
-                    <p class="text-slate-700 mb-2 text-lg"><strong>שטח = (בסיס × גובה) ÷ 2</strong></p>
+                <div class="bg-cyan-50 p-5 rounded-2xl border-2 border-cyan-200 panel-3d flex items-center gap-4">
+                    <svg width="80" height="60" viewBox="0 0 80 60" class="flex-shrink-0">
+                        <polygon points="10,50 70,50 40,10" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+                        <line x1="40" y1="10" x2="40" y2="50" stroke="#0f172a" stroke-dasharray="4" stroke-width="2"/>
+                        <text x="45" y="35" text-anchor="start" font-size="14" font-weight="bold" fill="#0f172a">h (גובה)</text>
+                        <text x="40" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">b (בסיס)</text>
+                    </svg>
+                    <div>
+                        <h3 class="text-xl font-black text-cyan-800 mb-1">משולש</h3>
+                        <p class="text-slate-700 text-lg">שטח = בסיס × גובה חלקי 2</p>
+                        <p class="text-cyan-700 font-black text-xl" dir="ltr">S = (b × h) / 2</p>
+                    </div>
                 </div>
-                <div class="bg-amber-50 p-5 rounded-2xl border-2 border-amber-200 panel-3d">
-                    <h3 class="text-xl font-black text-amber-800 mb-3 flex items-center gap-2"><span class="text-2xl">▱</span> מקבילית</h3>
-                    <p class="text-slate-700 mb-2 text-lg"><strong>שטח = צלע (בסיס) × גובה</strong></p>
+                <div class="bg-amber-50 p-5 rounded-2xl border-2 border-amber-200 panel-3d flex items-center gap-4">
+                    <svg width="80" height="60" viewBox="0 0 80 60" class="flex-shrink-0">
+                        <polygon points="20,10 80,10 60,50 0,50" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+                        <line x1="20" y1="10" x2="20" y2="50" stroke="#0f172a" stroke-dasharray="4" stroke-width="2"/>
+                        <text x="25" y="35" text-anchor="start" font-size="14" font-weight="bold" fill="#0f172a">h (גובה)</text>
+                        <text x="30" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">b (בסיס)</text>
+                    </svg>
+                    <div>
+                        <h3 class="text-xl font-black text-amber-800 mb-1">מקבילית</h3>
+                        <p class="text-slate-700 text-lg">שטח = בסיס × גובה</p>
+                        <p class="text-amber-700 font-black text-xl" dir="ltr">S = b × h</p>
+                    </div>
                 </div>
-                <div class="bg-orange-50 p-5 rounded-2xl border-2 border-orange-200 panel-3d">
-                    <h3 class="text-xl font-black text-orange-800 mb-3 flex items-center gap-2"><span class="text-2xl">⏢</span> טרפז</h3>
-                    <p class="text-slate-700 mb-2 text-lg"><strong>שטח = [(בסיס1 + בסיס2) × גובה] ÷ 2</strong></p>
+                <div class="bg-orange-50 p-5 rounded-2xl border-2 border-orange-200 panel-3d flex items-center gap-4">
+                    <svg width="80" height="60" viewBox="0 0 80 60" class="flex-shrink-0">
+                        <polygon points="25,10 55,10 70,50 10,50" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+                        <line x1="25" y1="10" x2="25" y2="50" stroke="#0f172a" stroke-dasharray="4" stroke-width="2"/>
+                        <text x="30" y="35" text-anchor="start" font-size="14" font-weight="bold" fill="#0f172a">h (גובה)</text>
+                        <text x="40" y="8" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">a (בסיס 1)</text>
+                        <text x="40" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">b (בסיס 2)</text>
+                    </svg>
+                    <div>
+                        <h3 class="text-xl font-black text-orange-800 mb-1">טרפז</h3>
+                        <p class="text-slate-700 text-lg">שטח = סכום הבסיסים × גובה חלקי 2</p>
+                        <p class="text-orange-700 font-black text-xl" dir="ltr">S = ((a + b) × h) / 2</p>
+                    </div>
+                </div>
+                <div class="bg-purple-50 p-5 rounded-2xl border-2 border-purple-200 panel-3d flex items-center gap-4 md:col-span-2">
+                    <svg width="80" height="60" viewBox="0 0 80 60" class="flex-shrink-0">
+                        <polygon points="40,5 75,30 40,55 5,30" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+                        <line x1="5" y1="30" x2="75" y2="30" stroke="#0f172a" stroke-dasharray="4" stroke-width="2"/>
+                        <line x1="40" y1="5" x2="40" y2="55" stroke="#0f172a" stroke-dasharray="4" stroke-width="2"/>
+                        <text x="45" y="15" text-anchor="start" font-size="12" font-weight="bold" fill="#0f172a">d1 (אלכסון)</text>
+                        <text x="25" y="25" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">d2 (אלכסון)</text>
+                    </svg>
+                    <div>
+                        <h3 class="text-xl font-black text-purple-800 mb-1">מעוין ודלתון</h3>
+                        <p class="text-slate-700 text-lg">שטח = מכפלת האלכסונים חלקי 2</p>
+                        <p class="text-purple-700 font-black text-xl" dir="ltr">S = (d1 × d2) / 2</p>
+                    </div>
                 </div>
             </div>
             <button onclick="document.getElementById('library-modal').classList.add('hidden')" class="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl text-lg font-black shadow-md btn-3d">סגור חלון</button>
@@ -342,11 +370,8 @@
     <!-- Main Game UI -->
     <header class="w-full max-w-7xl flex flex-col md:flex-row items-center justify-between gap-4 mb-4 bg-white p-3 md:p-5 rounded-[2.5rem] panel-3d border border-slate-200 relative z-30">
         <div class="flex items-center gap-4 w-full md:w-auto">
-            <div class="bg-blue-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0 border-b-4 border-blue-800 relative group cursor-pointer" onclick="openEditor()">
+            <div class="bg-blue-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0 border-b-4 border-blue-800">
                 <span id="level-num">1</span>
-                <div class="absolute inset-0 bg-blue-900/80 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span class="text-xl">⚙️</span>
-                </div>
             </div>
             <div class="flex-1 flex flex-col items-start">
                 <h1 class="text-xl md:text-2xl font-black text-slate-800 truncate">ממלכת הגיאומטריה של גלי</h1>
@@ -367,10 +392,6 @@
             <button onclick="goHome()" class="flex flex-col items-center justify-center bg-blue-50 border-2 border-blue-200 hover:bg-white rounded-xl px-3 md:px-4 py-2 transition hover:scale-105 btn-3d shadow-sm" title="חזרה למסך הראשי">
                 <span class="text-2xl mb-1">🏠</span>
                 <span class="text-[10px] md:text-xs font-bold text-blue-700">ראשי</span>
-            </button>
-            <button onclick="openEditor()" class="flex flex-col items-center justify-center bg-slate-50 border-2 border-slate-200 hover:bg-slate-100 rounded-xl px-3 py-2 transition hover:scale-105 btn-3d shadow-sm" title="ערוך סיפורים">
-                <span class="text-2xl mb-1">⚙️</span>
-                <span class="text-[10px] md:text-xs font-bold text-slate-500">עורך עלילה</span>
             </button>
             <button id="mute-btn" class="flex flex-col items-center justify-center bg-slate-100 border-2 border-slate-200 hover:bg-slate-200 rounded-xl px-3 py-2 transition hover:scale-105 btn-3d shadow-sm" title="השתק/הפעל צלילים">
                 <span class="text-2xl mb-1" id="mute-icon">🔊</span>
@@ -398,13 +419,14 @@
 
     <main class="w-full max-w-7xl flex flex-col gap-6 relative z-10">
         <!-- Story Panel -->
-        <div id="story-panel" class="w-full p-6 rounded-[2.5rem] border relative overflow-hidden transition-colors duration-500 text-right panel-3d">
+        <div id="story-panel" class="w-full p-6 rounded-[2.5rem] border relative overflow-hidden transition-colors duration-500 text-right panel-3d flex items-center">
             <div id="story-blob" class="absolute top-0 right-0 w-40 h-40 rounded-full -mr-20 -mt-20 opacity-30 transition-colors duration-500"></div>
-            <div class="relative z-10">
-                <h3 id="story-title" class="text-2xl font-black mb-2 flex items-center gap-3 justify-start w-fit">
-                    <span id="story-title-text">המשימה...</span> <span id="story-char" class="text-4xl drop-shadow-md">🎮</span> 
+            <div class="relative z-10 w-full">
+                <h3 id="story-title" class="text-2xl font-black mb-2 flex items-center justify-start w-fit">
+                    <span id="story-char" class="text-4xl drop-shadow-md ml-3">🎮</span> 
+                    <span id="story-title-text">המשימה...</span>
                 </h3>
-                <p id="story-desc" class="font-bold text-lg leading-relaxed transition-colors duration-500 max-w-4xl text-slate-700">טוען...</p>
+                <p id="story-desc" class="font-bold text-lg leading-relaxed transition-colors duration-500 max-w-4xl text-slate-700 pr-12">טוען...</p>
             </div>
         </div>
 
@@ -413,10 +435,12 @@
             <div id="game-main" class="lg:col-span-7 bg-white p-4 rounded-[2.5rem] border border-slate-200 relative text-right flex flex-col panel-3d">
                 <div id="canvas-container" class="w-full aspect-[6/5] min-h-[400px] border-4 border-slate-200 rounded-[2rem] relative shadow-inner overflow-hidden" dir="ltr">
                     <svg id="game-svg" viewBox="0 0 600 500" class="w-full h-full overflow-visible bg-slate-50 transition-colors duration-500"></svg>
+                    <!-- HTML Overlay for perfectly placed labels and buttons! -->
                     <div id="interactive-overlay" class="absolute inset-0 pointer-events-none rounded-[2rem]"></div>
+                    
                     <div id="knight-walker" class="hidden flex flex-col items-center pointer-events-auto transition-all">
                         <div id="knight-bubble" class="bg-white border-4 border-indigo-500 rounded-2xl px-4 py-3 text-base font-black shadow-2xl text-indigo-900 leading-tight text-center transition-opacity duration-300 panel-3d" dir="rtl"></div>
-                        <span id="walker-char" class="pointer-events-none drop-shadow-lg">🚶‍♂️</span>
+                        <span id="walker-char" class="pointer-events-none drop-shadow-lg text-5xl">🚶‍♂️</span>
                     </div>
                 </div>
                 <div id="status-msg" class="hidden w-full p-4 mt-4 rounded-2xl font-black border-2 text-center transition-all duration-300 text-lg shadow-sm panel-3d"></div>
@@ -488,7 +512,7 @@
         </div>
     </div>
 
-    <!-- Final Report Modal (Updated with Stats!) -->
+    <!-- Final Report Modal -->
     <div id="report-modal" class="hidden fixed inset-0 flex items-center justify-center p-4 z-[600]">
         <div class="bg-white rounded-[3.5rem] p-8 max-w-3xl w-full shadow-2xl text-center border-b-[12px] border-emerald-500 text-right overflow-y-auto max-h-[90vh] panel-3d">
             <div class="text-7xl mb-2 text-center drop-shadow-lg">📜</div>
@@ -526,14 +550,13 @@
         let selectedStoryId = 'class42';
         let difficulty = 2;
         let levelsCache = [];
-        let MAX_LEVELS = 6;
+        let MAX_LEVELS = 3; // Default
         let gameStarted = false;
         let walkStepResolver = null;
         let isWalking = false;
         let AVAILABLE_GENERATORS = [];
         let isMuted = false;
 
-        // Statistics Tracker for Report
         let gameStats = {
             missing: { right: 0, wrong: 0 },
             perimeterWalk: { right: 0, wrong: 0 },
@@ -630,7 +653,6 @@
             document.getElementById('scratchpad').classList.remove('hidden');
         }
         
-        // Easter Egg Checker! (Area 67 sparks joy!)
         function checkEasterEgg(val, correctVal) {
             if (val === 67 && val === correctVal) {
                 var duration = 4000; var end = Date.now() + duration;
@@ -644,14 +666,13 @@
         }
 
         function generateStatsReport() {
-            let strong = [];
-            let weak = [];
+            let strong = []; let weak = [];
             
             if (gameStats.missing.right > 0 && gameStats.missing.wrong <= 1) strong.push('חישוב צלעות חסרות');
-            else if (gameStats.missing.wrong > 1) weak.push('חישוב צלעות חסרות (חיבור/חיסור)');
+            else if (gameStats.missing.wrong > 1) weak.push('חישוב צלעות חסרות');
 
             if (gameStats.perimeterWalk.right > 0 && gameStats.perimeterWalk.wrong <= 2) strong.push('חיבור צלעות בטיול היקף');
-            else if (gameStats.perimeterWalk.wrong > 2) weak.push('חיבור צלעות ברצף');
+            else if (gameStats.perimeterWalk.wrong > 2) weak.push('חיבור צלעות בטיול היקף');
 
             if (gameStats.perimeterTotal.right > 0 && gameStats.perimeterTotal.wrong <= 1) strong.push('מציאת היקף סופי');
             else if (gameStats.perimeterTotal.wrong > 1) weak.push('חישוב היקף סופי');
@@ -661,16 +682,10 @@
 
             let html = '<h4 class="font-black text-2xl mb-4 text-slate-800">סיכום ביצועים אישי:</h4>';
             
-            if (strong.length > 0) {
-                html += `<p class="text-green-700 font-bold mb-3 text-lg">💪 <span class="underline text-green-800">נקודות חוזק מדהימות:</span> ${strong.join(', ')}.</p>`;
-            }
-            if (weak.length > 0) {
-                html += `<p class="text-rose-600 font-bold text-lg">🎯 <span class="underline text-rose-800">כדאי לתרגל עוד קצת:</span> ${weak.join(', ')}.</p>`;
-            } else if (strong.length > 0) {
-                html += `<p class="text-emerald-600 font-bold text-lg">🌟 פשוט מושלם! אין שום נושא שצריך לחזק!</p>`;
-            } else {
-                html += `<p class="text-slate-600 font-bold text-lg">ממליצים להמשיך לתרגל כדי להתחזק בכל הנושאים! אתם יכולים!</p>`;
-            }
+            if (strong.length > 0) { html += `<p class="text-green-700 font-bold mb-3 text-lg">💪 <span class="underline text-green-800">נקודות חוזק מדהימות:</span> ${strong.join(', ')}.</p>`; }
+            if (weak.length > 0) { html += `<p class="text-rose-600 font-bold text-lg">🎯 <span class="underline text-rose-800">כדאי לתרגל עוד קצת:</span> ${weak.join(', ')}.</p>`; } 
+            else if (strong.length > 0) { html += `<p class="text-emerald-600 font-bold text-lg">🌟 פשוט מושלם! אין שום נושא שצריך לחזק!</p>`; } 
+            else { html += `<p class="text-slate-600 font-bold text-lg">ממליצים להמשיך לתרגל כדי להתחזק בכל הנושאים! אתם יכולים!</p>`; }
             
             document.getElementById('stats-summary').innerHTML = html;
         }
@@ -689,7 +704,7 @@
 
         const STORIES = {
             class42: {
-                name: "משימת כיתה ד'2", char: "🎒", themeColor: "blue", wandName: "עזרת המורה",
+                name: "משימת כיתה ד'2", char: "✏️", themeColor: "blue", wandName: "סרגל כיתתי", wandIcon: "📏",
                 bg: (svg) => {
                     svg.innerHTML += `
                         <defs>
@@ -715,31 +730,29 @@
                             </g>
                         </g>
 
-                        <!-- Huge Whiteboard (Moved Up more!) -->
+                        <!-- Big Whiteboard -->
                         <g transform="translate(250, 0)">
-                            <rect width="320" height="120" fill="#0f172a" stroke="#94a3b8" stroke-width="8" rx="6" />
-                            <rect x="10" y="110" width="300" height="5" fill="#cbd5e1" /> <!-- Chalk ledge -->
-                            <rect x="20" y="105" width="20" height="5" fill="#f8fafc" /> <!-- White Chalk -->
-                            <rect x="45" y="105" width="20" height="5" fill="#fcd34d" /> <!-- Yellow Chalk -->
-                            <rect x="250" y="100" width="30" height="10" fill="#334155" rx="2" /> <!-- Eraser -->
-                            <text x="160" y="40" font-family="Assistant" font-weight="900" font-size="28" fill="#38bdf8" text-anchor="middle">ברוכים הבאים לד'2!</text>
-                            <text x="160" y="70" font-family="Assistant" font-weight="bold" font-size="20" fill="#f43f5e" text-anchor="middle">שטח = אורך × רוחב</text>
-                            <text x="160" y="95" font-family="Assistant" font-weight="bold" font-size="16" fill="#34d399" text-anchor="middle">היקף = סכום כל הצלעות</text>
+                            <rect width="320" height="120" fill="#ffffff" stroke="#94a3b8" stroke-width="8" rx="6" />
+                            <rect x="10" y="110" width="300" height="5" fill="#cbd5e1" />
+                            <rect x="20" y="105" width="20" height="5" fill="#1d4ed8" />
+                            <rect x="45" y="105" width="20" height="5" fill="#b91c1c" />
+                            <rect x="250" y="100" width="30" height="10" fill="#475569" rx="2" />
+                            <text x="160" y="40" font-family="Assistant" font-weight="900" font-size="28" fill="#1e3a8a" text-anchor="middle">ברוכים הבאים לד'2!</text>
+                            <text x="160" y="70" font-family="Assistant" font-weight="bold" font-size="20" fill="#be123c" text-anchor="middle">שטח = אורך × רוחב</text>
+                            <text x="160" y="95" font-family="Assistant" font-weight="bold" font-size="16" fill="#15803d" text-anchor="middle">היקף = סכום כל הצלעות</text>
                         </g>
                         
-                        <!-- Teacher's Desk -->
+                        <!-- Teacher's Desk & Clock (Restored from old version!) -->
                         <g transform="translate(420, 320)">
                             <rect x="0" y="0" width="130" height="70" fill="#d97706" rx="4" />
                             <rect x="10" y="10" width="110" height="60" fill="#b45309" rx="4" />
-                            <!-- Apple -->
                             <circle cx="100" cy="-10" r="12" fill="#ef4444" />
                             <path d="M100,-22 Q105,-30 112,-25" stroke="#16a34a" stroke-width="4" fill="none"/>
-                            <!-- Books -->
                             <rect x="20" y="-15" width="40" height="15" fill="#3b82f6" />
                             <rect x="25" y="-25" width="30" height="10" fill="#10b981" />
                         </g>
 
-                        <!-- Student Desks -->
+                        <!-- Student Desks (Restored from old version!) -->
                         <g opacity="0.85">
                            <rect x="80" y="240" width="70" height="35" fill="#fbbf24" rx="4" stroke="#d97706" stroke-width="2"/>
                            <rect x="200" y="240" width="70" height="35" fill="#fbbf24" rx="4" stroke="#d97706" stroke-width="2"/>
@@ -753,7 +766,7 @@
                            <circle cx="235" cy="330" r="12" fill="#c084fc" />
                         </g>
 
-                        <!-- Clock -->
+                        <!-- Clock (Restored!) -->
                         <g transform="translate(120, -25)">
                             <circle cx="0" cy="0" r="25" fill="#ffffff" stroke="#334155" stroke-width="5" />
                             <line x1="0" y1="0" x2="0" y2="-15" stroke="#334155" stroke-width="3" class="anim-spin" style="transform-origin: 0px 0px; animation-duration: 10s;" />
@@ -767,16 +780,20 @@
                     `;
                 },
                 stages: [
-                    { title: "שלב 1: מציאת השטח המושלם", desc: "יוצאים לדרך! מצאנו שטח בבית הספר לבנות בו את כיתה ד'2 החדשה. בואו נבדוק אם הגודל מתאים לילדים." },
-                    { title: "שלב 2: שולחנות וכיסאות", desc: "הילדים צריכים מרחב ללמידה. אנחנו מודדים את אזור הישיבה כדי לוודא שלכולם יהיה נוח ומרווח." },
-                    { title: "שלב 3: פינת הקריאה", desc: "פינת הקריאה והספרייה של הכיתה! עזרו לנו לחשב את המידות כדי שייכנסו כל הספרים והפופים האהובים עלינו." },
-                    { title: "שלב 4: לוח חכם ענק", desc: "מצאנו לוח חכם מושלם למורה גלי, אבל צריך לוודא שהוא מתאים בדיוק לקיר המרכזי של הכיתה." },
-                    { title: "שלב 5: אישור סופי מהמנהלת", desc: "המרחב מוכן. אנחנו משרטטים את הצורה הסופית של הכיתה כדי לאשר למנהלת שזה בדיוק הגודל המתאים לילדי ד'2!" },
-                    { title: "שלב 6: חצר ד'2", desc: "הכיתה מושלמת! עכשיו אנחנו מתכננים מתחם משחקים פרטי בחצר, רק בשביל ילדי כיתה ד'2 האלופים." }
+                    { title: "שלב 1: מציאת השטח", desc: "יוצאים לדרך! מצאנו שטח בבית הספר לבנות בו את כיתה ד'2. בואו נבדוק את הגודל." },
+                    { title: "שלב 2: שולחנות וכיסאות", desc: "הילדים צריכים מרחב. אנחנו מודדים את אזור הישיבה כדי שיהיה נוח לכולם." },
+                    { title: "שלב 3: פינת הקריאה", desc: "הספרייה של הכיתה! עזרו לנו לחשב את המידות כדי שייכנסו כל הפופים." },
+                    { title: "שלב 4: לוח חכם", desc: "מצאנו לוח חכם מושלם, נבדוק אם הוא מתאים לקיר המרכזי של הכיתה." },
+                    { title: "שלב 5: שטיח כיתתי", desc: "אנחנו רוצים שטיח גדול ונעים למפגשי הבוקר. בואו נחשב את הגודל שלו." },
+                    { title: "שלב 6: ארון הציוד", desc: "כל הציוד שלנו צריך להיכנס בארון הענק הזה. בואו נמדוד את השטח שלו!" },
+                    { title: "שלב 7: פינת היצירה", desc: "כאן יהיו כל הצבעים והבלגן היצירתי של ד'2. חשבו את ההיקף להתקנת פאנלים." },
+                    { title: "שלב 8: עמדת המחשבים", desc: "המחשבים החדשים בדרך! עזרו לנו לתכנן את אזור העבודה המתוקשב." },
+                    { title: "שלב 9: עציצים ופרחים", desc: "הכנו פינה קטנה וירוקה ליד החלון. מה יהיה הגודל שלה?" },
+                    { title: "שלב 10: אישור סופי מהמנהלת!", desc: "הכל מוכן. משרטטים את המבנה הסופי לאישור המנהלת. כיתה ד'2 מושלמת!" }
                 ]
             },
             singers: {
-                name: "עולם הזמרות של גלי", char: "🎤", themeColor: "fuchsia", wandName: "מיקרופון קסם",
+                name: "עולם הזמרות של גלי", char: "🎤", themeColor: "fuchsia", wandName: "מיקרופון קסם", wandIcon: "🎤",
                 bg: (svg) => {
                     svg.innerHTML += `
                         <defs>
@@ -813,13 +830,19 @@
                 },
                 stages: [
                     { title: "שלב 1: הבמה של אנה זק", desc: "אנה זק צריכה עזרה בהכנת במת הטיקטוק החדשה שלה! עזרו לה לחשב את המידות." },
-                    { title: "שלב 2: הפארק של נועה קירל", desc: "נועה קירל מופיעה בפארק הירקון! עזרו לה לתכנן את מתחם ה-VIP של הפאוץ'." },
+                    { title: "שלב 2: מתחם הפאוץ'", desc: "נועה קירל מופיעה בפארק הירקון! עזרו לה לתכנן את מתחם ה-VIP המיוחד שלה." },
                     { title: "שלב 3: האצטדיון של ביונסה", desc: "המלכה ביונסה הגיעה! עלינו לתכנן את רחבת הריקודים הענקית למופע שלה." },
-                    { title: "שלב 4: מופע הענק של המנהיגה גלי!", desc: "כולן מתאחדות למופע הענק של המנהיגה גלי! חשבו את המידות של הבמה המרכזית הגדולה." }
+                    { title: "שלב 4: חדר החזרות של טיילור סוויפט", desc: "טיילור צריכה חדר חזרות סודי שקט וגדול. בואו נחשב את השטח שלו." },
+                    { title: "שלב 5: השטיח האדום", desc: "הכוכבות צועדות על השטיח האדום. נחשב את ההיקף שלו כדי לשים חבלי אבטחה." },
+                    { title: "שלב 6: אולפן ההקלטות", desc: "כאן קורה הקסם! אולפן הקלטות חדש לכל הזמרות שיגיעו לשיר יחד." },
+                    { title: "שלב 7: עמדת הדיג'יי", desc: "הדיג'יי צריך עמדה מטורפת עם מלא רמקולים. בואו נבדוק את הגודל של הבמה שלו." },
+                    { title: "שלב 8: רחבת הקהל", desc: "הקהל כבר מחכה בחוץ! בואו נכין את רחבת המעריצים הכי גדולה שיש." },
+                    { title: "שלב 9: חדר ההלבשה הנוצץ", desc: "לפני שעולים לבמה, הכוכבות מתארגנות בחדר הלבשה ענק. חשבו את המידות שלו." },
+                    { title: "שלב 10: מופע הענק של גלי!", desc: "כולן מתאחדות למופע הענק של המנהיגה גלי! חשבו את המידות של הבמה המרכזית הגדולה." }
                 ]
             },
             brawl: { 
-                name: "זירת הבראולרים", char: "🌵", themeColor: "purple", wandName: "שיקוי כוח",
+                name: "זירת הבראולרים", char: "🌵", themeColor: "purple", wandName: "שיקוי כוח", wandIcon: "🧪",
                 bg: (svg) => {
                     svg.innerHTML += `
                         <defs>
@@ -852,11 +875,18 @@
                 stages: [
                     { title: "שלב 1: החומה החיצונית", desc: "התחלנו בהכנות לקרב! עזרו לנו לבנות את קיר ההגנה החיצוני כדי שלא ניפגע." },
                     { title: "שלב 2: מחסן התחמושת", desc: "יופי, הקיר מוכן וחזק! עכשיו בתוך החומה אנחנו בונים את מחסן התחמושת בצורה הזו." },
-                    { title: "שלב 3: אבטחת התיבה", desc: "המחסן בנוי ומאובטח. במרכז נמצאת תיבת השלל המיוחדת - חשבו את ההיקף שלה להתקנת אזעקה." }
+                    { title: "שלב 3: אזור מסתור בשיחים", desc: "ספייק צריך מקום להתחבא בו. נחשב את השטח עבור שיחי המסתור." },
+                    { title: "שלב 4: אבטחת תיבת השלל", desc: "המחסן בנוי ומאובטח. במרכז נמצאת תיבת השלל המיוחדת - חשבו את ההיקף שלה להתקנת אזעקה." },
+                    { title: "שלב 5: עמדת הצלפים", desc: "פייפר מחפשת זווית טובה. עזרו לנו למדוד את שטח עמדת הצלפים הגבוהה." },
+                    { title: "שלב 6: שדה המוקשים של בּוֹ", desc: "זהירות! אנחנו תוחמים אזור למלכודות. כמה אורך חוט אזהרה נצטרך?" },
+                    { title: "שלב 7: אוהל הרפואה של פּוֹקוֹ", desc: "מקום לחזור אליו ולהתרפא עם מוזיקה נעימה. חשבו את מידות האוהל." },
+                    { title: "שלב 8: זירת הדו-קרב", desc: "כאן מתרחשים הקרבות של 1 על 1! הזירה חייבת להיות מושלמת." },
+                    { title: "שלב 9: מגדל השמירה", desc: "קרואו שומר עלינו מלמעלה. נחשב את השטח של גג מגדל השמירה שלו." },
+                    { title: "שלב 10: מבצר הניצחון", desc: "זהו המבנה המרכזי של הקבוצה שלנו בקרב הענק! המנצח לוקח הכל." }
                 ]
             },
             blocks: { 
-                name: "עולם הבלוקים", char: "👷", themeColor: "emerald", wandName: "מכוש יהלום",
+                name: "עולם הבלוקים", char: "👷", themeColor: "emerald", wandName: "מכוש", wandIcon: "⛏️",
                 bg: (svg) => {
                     svg.innerHTML += `
                         <defs>
@@ -887,11 +917,19 @@
                 },
                 stages: [
                     { title: "שלב 1: המקלט הראשון", desc: "הלילה יורד וסטיב חייב לבנות את המקלט הראשון שלו. עזרו לו למצוא את המידות." },
-                    { title: "שלב 2: חוות החיטה", desc: "שרדנו את הלילה במקלט! עכשיו צריך להרחיב ולהקים חוות חיטה גדולה שיהיה אוכל." }
+                    { title: "שלב 2: חוות החיטה", desc: "שרדנו את הלילה במקלט! עכשיו צריך להרחיב ולהקים חוות חיטה גדולה שיהיה אוכל." },
+                    { title: "שלב 3: חפירת המכרה", desc: "אנחנו יורדים מתחת לאדמה. נחשב את השטח של המכרה כדי שלא יקרוס עלינו." },
+                    { title: "שלב 4: בית העץ", desc: "לבנות על האדמה זה נחמד, אבל בית על עץ זה מושלם! עזרו לנו לחשב את הרצפה." },
+                    { title: "שלב 5: שער לנטר", desc: "גילינו את האובסידיאן. בואו נחשב את היקף השער כדי להגיע למימד הבא." },
+                    { title: "שלב 6: בריכת הלבה", desc: "זהירות, חם פה! יש כאן אזור לבה שאנחנו חייבים לעקוף בעזרת גשר זהיר." },
+                    { title: "שלב 7: דיר הכבשים", desc: "צריך לאסוף צמר למיטות. בואו נבנה גדר מסביב לדיר, חשבו כמה בלוקים נצטרך להיקף." },
+                    { title: "שלב 8: גשר האבן הגדול", desc: "יש כאן תהום עצומה. אנחנו בונים גשר אבן לחצות אותה בביטחה." },
+                    { title: "שלב 9: טירת היהלומים", desc: "הצלחנו! מצאנו המון יהלומים ואנחנו בונים איתם טירה. עזרו בתכנון החדר הראשי." },
+                    { title: "שלב 10: חדר האוצרות", desc: "כאן נאחסן את כל מה שאספנו במסע. המבנה החשוב ביותר שלנו!" }
                 ]
             },
             cyber: {
-                name: "עיר העתיד", char: "🤖", themeColor: "cyan", wandName: "פריצת סייבר",
+                name: "עיר העתיד", char: "🤖", themeColor: "cyan", wandName: "האק", wandIcon: "💻",
                 bg: (svg) => {
                     svg.innerHTML += `
                         <defs>
@@ -910,14 +948,12 @@
                             <rect x="420" y="250" width="50" height="250" fill="#be185d" stroke="#f472b6" stroke-width="2" />
                             <rect x="500" y="100" width="70" height="400" fill="#0f766e" stroke="#2dd4bf" stroke-width="2" />
                         </g>
-                        <!-- Server lights -->
                         <g class="anim-pulse" fill="#22d3ee">
                             <rect x="130" y="180" width="10" height="5" /> <rect x="130" y="200" width="10" height="5" />
                             <rect x="510" y="130" width="15" height="5" /> <rect x="510" y="150" width="15" height="5" />
                         </g>
                         <rect x="0" y="400" width="600" height="100" fill="url(#grid)" transform="skewX(-40) translate(50, 0)" opacity="0.6"/>
                         
-                        <!-- Flying car -->
                         <g class="anim-cloud" transform="translate(0, 100)">
                             <rect x="0" y="0" width="40" height="15" fill="#f43f5e" rx="5" />
                             <rect x="10" y="-5" width="20" height="10" fill="#cbd5e1" rx="2" />
@@ -930,10 +966,21 @@
                         </g>
                     `;
                 },
-                stages: [{title: "בדיקת העיר", desc: "העיר זקוקה לשרטוט חכם."}]
+                stages: [
+                    { title: "שלב 1: מעבדת הרובוטיקה", desc: "מתחילים לתכנן את עיר העתיד. הרובוטים צריכים מעבדה לטיפולים שוטפים." },
+                    { title: "שלב 2: מנחת הרחפנים", desc: "מכוניות מעופפות ורחפנים ינחתו כאן. בואו נחשב את השטח של המנחת." },
+                    { title: "שלב 3: ליבת המחשב המרכזי", desc: "כל המידע של העיר נשמר כאן. אנחנו מודדים את היקף הליבה כדי להתקין כבלי רשת." },
+                    { title: "שלב 4: שער הלייזר", desc: "אבטחה מעל הכל! שער הלייזר העצום יגן על הכניסה לעיר הסייבר." },
+                    { title: "שלב 5: מסלול הרחפות התחתי", desc: "אנחנו סוללים מסלול לנסיעה מהירה במיוחד. נבדוק שאין בו תקלות גיאומטריות." },
+                    { title: "שלב 6: אנטנת התקשורת", desc: "מגדל התקשורת של העיר צריך בסיס יציב. עזרו לחשב את השטח שבתחתית האנטנה." },
+                    { title: "שלב 7: כור האנרגיה הסולארית", desc: "מכאן מגיעה כל האנרגיה. פאנלים צריכים להיכנס פנימה, מדדו את השטח!" },
+                    { title: "שלב 8: חדר הבקרה הגלובלי", desc: "המוח של העיר. כאן יושבים כל הגיבורים ומפקחים על המערכות." },
+                    { title: "שלב 9: כיפת המגן ההולוגרפית", desc: "בונים כיפה ענקית. עזרו לנו עם החלק של בסיס הכיפה שעליו היא יושבת." },
+                    { title: "שלב 10: עיר העתיד המושלמת", desc: "הכל מוכן! זהו המתחם האחרון שמשלים את הבנייה של כל המטרופולין הממוחשב." }
+                ]
             },
             pirates: {
-                name: "אי הפיראטים", char: "🏴‍☠️", themeColor: "teal", wandName: "מצפן זהב",
+                name: "אי הפיראטים", char: "🏴‍☠️", themeColor: "teal", wandName: "מצפן", wandIcon: "🧭",
                 bg: (svg) => {
                     svg.innerHTML += `
                         <defs>
@@ -945,7 +992,6 @@
                         <rect width="100%" height="100%" fill="url(#g-sea)" />
                         <circle cx="500" cy="100" r="40" fill="#fef08a" opacity="0.9" class="anim-pulse" />
                         
-                        <!-- Ship in distance -->
                         <g transform="translate(450, 200)" opacity="0.4" class="anim-wave">
                             <path d="M0,0 L40,0 L30,20 L10,20 Z" fill="#78350f" />
                             <path d="M20,0 L20,-30 L40,-10 Z" fill="#e2e8f0" />
@@ -969,10 +1015,21 @@
                         <path d="M 150,460 L 170,480 M 170,460 L 150,480" stroke="#dc2626" stroke-width="5" />
                     `;
                 },
-                stages: [{title: "מפת האוצר", desc: "מצאנו אי חדש ויש פה אוצר מוחבא!"}]
+                stages: [
+                    { title: "שלב 1: ספינת השודדים", desc: "ספינת הפיראטים שלנו צריכה רצפה חדשה! עזרו לנו לחשב את מידות הסיפון הראשי." },
+                    { title: "שלב 2: קריאת מפת האוצר", desc: "מצאנו אי חדש ויש פה אוצר מוחבא! בואו נחשב את ההיקף של המקום שמסומן ב-X." },
+                    { title: "שלב 3: תותחי הסיפון", desc: "אנחנו מכינים את האזור שבו יעמדו תותחי הספינה. בואו נמדוד את השטח." },
+                    { title: "שלב 4: התורן המרכזי", desc: "צריך לתפור מפרש חדש וענק עבור התורן שלנו. מהן מידות הבד שנצטרך?" },
+                    { title: "שלב 5: מערת הגולגולת", desc: "הגענו לאי! יש פה מערה מסתורית ואנחנו צריכים למדוד את הפתח שלה כדי לדעת אם נוכל להיכנס." },
+                    { title: "שלב 6: בניית מזח לסירות", desc: "כדי לפרוק את האוצר אנחנו בונים מזח צף מעץ על חוף האי." },
+                    { title: "שלב 7: גשר החבלים", desc: "מעל התהום העמוקה מתוח גשר חבלים רעוע. בואו נחשב את האורך והשטח כדי לשפץ אותו." },
+                    { title: "שלב 8: מחבוא התוכי", desc: "לתוכי הפיראטים שלנו מגיע כלוב מרווח מזהב. עזרו לתכנן לו אותו." },
+                    { title: "שלב 9: בקתת הקפטן", desc: "קפטן הספינה רוצה בקתה פרטית משלו על האי עם נוף לים." },
+                    { title: "שלב 10: אי המטמון והאוצר האמיתי!", desc: "מצאנו את חדר המטמון העצום! עזרו לנו לחשב את הגודל של החדר שבו יאוחסן כל הזהב שלנו!" }
+                ]
             },
             forest: { 
-                name: "יער הקסמים", char: "🧝‍♂️", themeColor: "emerald", wandName: "אבקת פיות",
+                name: "יער הקסמים", char: "🧝‍♂️", themeColor: "emerald", wandName: "אבקת פיות", wandIcon: "✨",
                 bg: (svg) => {
                     svg.innerHTML += `
                         <defs>
@@ -1009,10 +1066,21 @@
                         </g>
                     `;
                 },
-                stages: [{title: "שביל הפיות", desc: "סוללים שביל קסום."}]
+                stages: [
+                    { title: "שלב 1: סלילת שביל הפיות", desc: "סוללים שביל קסום ונוצץ כדי ששאר חיות היער יוכלו למצוא את הדרך בחשיכה." },
+                    { title: "שלב 2: פטריית הקסם", desc: "גילינו פטרייה זוהרת ענקית! בואו נמדוד את המרחב שסביבה כדי לגדר אותו מטרולים." },
+                    { title: "שלב 3: רחבת עץ המשאלות", desc: "מסביב לעץ המשאלות העתיק יש רחבה מיוחדת בה מתאספים בלילות ירח מלא." },
+                    { title: "שלב 4: בריכת חבצלות המים", desc: "לצפרדעי היער מגיעה בריכה מושלמת. עזרו לנו לחשב את גודל הבריכה שניצור עבורן." },
+                    { title: "שלב 5: בית הגמדים", desc: "הגמדים בונים לעצמם בית חדש ונסתר בין שורשי העצים. חשבו את מידות הרצפה." },
+                    { title: "שלב 6: קרחת היער", desc: "מצאנו קרחת יער פתוחה שמתאימה למשחקים. מה השטח הפנוי שיש לנו שם?" },
+                    { title: "שלב 7: המפל הסודי", desc: "מאחורי המפל מסתתר אזור יבש וקסום. אנחנו צריכים לדעת מה הגודל שלו." },
+                    { title: "שלב 8: גשר השדונים", desc: "השדונים הקטנים לא יכולים לחצות את הנחל. בואו נתכנן להם גשר מדויק וקטן." },
+                    { title: "שלב 9: מערת גבישי הזמן", desc: "במערה זו מוסתרים גבישים שמאירים לנצח. אנחנו מודדים את שטח המערה להגנה." },
+                    { title: "שלב 10: טירת מלך היער", desc: "טירת העלים והענפים של מלך היער המכושף יוצאת לדרך! המשימה הכי גדולה שלנו." }
+                ]
             },
             ocean: { 
-                name: "ממלכת אטלנטיס", char: "🧜‍♀️", themeColor: "blue", wandName: "קונכיית קסם",
+                name: "ממלכת אטלנטיס", char: "🧜‍♀️", themeColor: "blue", wandName: "קונכייה", wandIcon: "🐚",
                 bg: (svg) => {
                     svg.innerHTML += `
                         <defs>
@@ -1050,10 +1118,21 @@
                         </g>
                     `;
                 },
-                stages: [{title: "ארמון האלמוגים", desc: "בונים ארמון לאלמוגים העתיקים."}]
+                stages: [
+                    { title: "שלב 1: ארמון האלמוגים", desc: "בונים חדר מפואר מאלמוגים עתיקים בשביל בת הים הקטנה." },
+                    { title: "שלב 2: גן צדפות הפנינה", desc: "תכנון מדויק לגן התת-ימי בו גדלות צדפות ענקיות עם פנינים זוהרות." },
+                    { title: "שלב 3: מסלול מרוץ סוסוני הים", desc: "סוסוני הים עושים מרוץ היום! בואו נחשב את השטח של הרחבה." },
+                    { title: "שלב 4: מערת הכריש הידידותי", desc: "מצאנו כריש חביב שצריך מערה מרווחת לישון בה. בואו נמדוד!" },
+                    { title: "שלב 5: אזור הספינה הטרופה", desc: "חוקרים שרידים של ספינת פיראטים שטבעה כאן לפני מאות שנים." },
+                    { title: "שלב 6: מזרקת קצף גלים", desc: "למרכז הממלכה החלטנו להוסיף מזרקה שעושה קצף. חשבו את המידות לבסיס שלה." },
+                    { title: "שלב 7: כס המלכות של פוסידון", desc: "מלך הים מגיע לביקור וצריך מקום של כבוד לשבת בו ולתצפת על הכל." },
+                    { title: "שלב 8: חדר אוצר תת-ימי", desc: "אוספים את כל מטבעות הזהב שנפלו לאוקיינוס ובונים להם כספת מיוחדת." },
+                    { title: "שלב 9: שערי אטלנטיס", desc: "אנחנו מתכננים את שער הכניסה המפואר לעיר האבודה מתחת לים." },
+                    { title: "שלב 10: עיר המצולות במלואה", desc: "עבודה מדהימה! זהו המתחם האחרון שמשלים את המראה של ממלכת הים השלמה!" }
+                ]
             },
             ninja: { 
-                name: "כפר הנינג'ות", char: "🥷", themeColor: "rose", wandName: "פצצת עשן",
+                name: "כפר הנינג'ות", char: "🥷", themeColor: "rose", wandName: "פצצת עשן", wandIcon: "💨",
                 bg: (svg) => {
                     svg.innerHTML += `
                         <defs>
@@ -1083,10 +1162,21 @@
                         </g>
                     `;
                 },
-                stages: [{title: "דוג'ו האימונים", desc: "מקום האימונים הסודי שלנו."}]
+                stages: [
+                    { title: "שלב 1: דוג'ו האימונים", desc: "מקום האימונים הסודי והראשי של הנינג'ות, כאן לומדים את המהלכים הבסיסיים." },
+                    { title: "שלב 2: מסלול המכשולים המרחף", desc: "קופצים מעל קוצים ותהומות! בואו נחשב את מידות מסלול האימונים." },
+                    { title: "שלב 3: קיר הטיפוס החלקלק", desc: "כדי להתחזק, לוחמי הנינג'ה מטפסים על קירות מיוחדים. נמדוד את השטח." },
+                    { title: "שלב 4: זירת החרבות השקטה", desc: "זירה חרישית שבה עורכים קרבות חרבות ללא אף מילה. מה ההיקף שלה?" },
+                    { title: "שלב 5: חדר אימון השוריקנים", desc: "אזור שבו זורקים כוכבי נינג'ה למטרות קטנות. זהירות, זה מסוכן!" },
+                    { title: "שלב 6: גן הזן והבונסאי", desc: "אחרי אימון קשה מגיע זמן למדיטציה בין עצי בונסאי עתיקים." },
+                    { title: "שלב 7: גשר אבן מסורתי", desc: "מעל נהר חצץ קטן נעצב ונתכנן גשר אבן שקט שעוזר להתגנבות." },
+                    { title: "שלב 8: מגדל פעמון האזהרה", desc: "במקרה שפולשים מגיעים, פעמון עצום יצלצל. עזרו לתכנן את בסיס המגדל." },
+                    { title: "שלב 9: חדר המגילות והסודות", desc: "כאן שומרים את כל הטריקים והשיקויים העתיקים. סודי ביותר." },
+                    { title: "שלב 10: מקדש הדרקון האגדי", desc: "מבחן הנינג'ה האחרון מתקיים במקדש הזה. עזרו לנו לשרטט את צורתו הסופית!" }
+                ]
             },
             dino: { 
-                name: "פארק הדינוזאורים", char: "🦖", themeColor: "amber", wandName: "רדאר קדום",
+                name: "פארק הדינוזאורים", char: "🦖", themeColor: "amber", wandName: "רדאר", wandIcon: "📡",
                 bg: (svg) => {
                     svg.innerHTML += `
                         <defs>
@@ -1118,28 +1208,35 @@
                         </g>
                     `;
                 },
-                stages: [{title: "כלוב הטירקס", desc: "זהירות! צריך לבנות חומה חזקה."}]
+                stages: [
+                    { title: "שלב 1: כלוב הטירקס", desc: "זהירות! הדינוזאור המסוכן מכולם זקוק לכלוב מחוזק ובטוח." },
+                    { title: "שלב 2: בריכת הברונטוזאורוס", desc: "הענקים צמחיים האלה צריכים המון מים לשתות. בואו נמדוד את הבריכה." },
+                    { title: "שלב 3: מתחם הוולוקירפטורים", desc: "הם חכמים ומהירים, וצריכים המון שטח כדי לרוץ. חשבו את אזור הגידור." },
+                    { title: "שלב 4: שערי הפארק העצומים", desc: "כאן מבקרים ייכנסו בהתלהבות עם הג'יפים. בואו נתכנן את רחבת השער." },
+                    { title: "שלב 5: מעבדת הגנטיקה הקדומה", desc: "איפה שכל הקסם (והמדע) קורה. המדענים צריכים מעבדה מדויקת במרכז הפארק." },
+                    { title: "שלב 6: מסלול רכבי הסיור", desc: "רכבי הסיור נוסעים על פסי חשמל. בואו נחשב את המסלול באזור הבטוח." },
+                    { title: "שלב 7: קן ביצי דינוזאור", desc: "מדגרה חמימה ומוגנת לדור העתיד של הפארק. צורתה חייבת להיות מדויקת." },
+                    { title: "שלב 8: גשר תצפית מזכוכית", desc: "לראות את הדינוזאורים מלמעלה! הגשר מזכוכית חייב להיות חזק ומהונדס היטב." },
+                    { title: "שלב 9: מרכז המבקרים הראשי", desc: "המסעדה, החנות והמזגנים - הכל במבנה ענק שמארח את האנשים בסוף היום." },
+                    { title: "שלב 10: איסלה נובלר המלאה", desc: "אי הדינוזאורים כמעט מוכן! נשרטט את מבנה הבקרה הראשי להפעלה סופית." }
+                ]
             }
         };
 
         function updateTheme(world, stageIndex) {
             const theme = themeMaps[world.themeColor] || themeMaps.indigo;
             const sp = document.getElementById('story-panel');
-            sp.className = `w-full p-6 rounded-[2.5rem] border relative overflow-hidden transition-colors duration-500 ${theme.light} ${theme.border} text-right panel-3d`;
+            sp.className = `w-full p-6 rounded-[2.5rem] border relative overflow-hidden transition-colors duration-500 ${theme.light} ${theme.border} text-right panel-3d flex items-center`;
             document.getElementById('story-blob').className = `absolute top-0 right-0 w-40 h-40 rounded-full -mr-20 -mt-20 opacity-40 transition-colors duration-500 ${theme.bg}`;
-            document.getElementById('story-title').className = `text-2xl font-black mb-2 flex items-center gap-3 justify-start w-fit ${theme.text}`;
-            document.getElementById('story-desc').className = `font-bold text-lg leading-relaxed transition-colors duration-500 max-w-4xl ${theme.text}`;
+            document.getElementById('story-title').className = `text-2xl font-black mb-2 flex items-center justify-start w-fit ${theme.text}`;
+            document.getElementById('story-desc').className = `font-bold text-lg leading-relaxed transition-colors duration-500 max-w-4xl pr-12 ${theme.text}`;
             document.getElementById('story-char').textContent = world.char;
             document.getElementById('walker-char').textContent = world.char;
             
-            // Dynamic SVG background color to match theme
             document.getElementById('game-svg').style.backgroundColor = theme.svgBg;
             
-            const btnP = document.getElementById('btn-char-p');
-            if(btnP) btnP.textContent = world.char;
-            
-            const btnA = document.getElementById('btn-char-a');
-            if(btnA) btnA.textContent = world.char;
+            const btnP = document.getElementById('btn-char-p'); if(btnP) btnP.textContent = world.char;
+            const btnA = document.getElementById('btn-char-a'); if(btnA) btnA.textContent = world.char;
             
             const stagesLen = world.stages.length > 0 ? world.stages.length : 1;
             const stage = world.stages[stageIndex % stagesLen] || {title: "שלב", desc: "הרפתקה חדשה."};
@@ -1156,7 +1253,7 @@
             for(let key in STORIES) {
                 sel.innerHTML += `<option value="${key}">${STORIES[key].char} ${STORIES[key].name}</option>`;
             }
-            sel.value = selectedStoryId;
+            sel.value = document.getElementById('story-select').value || 'class42';
             window.loadEditorStory();
         };
 
@@ -1185,7 +1282,6 @@
             const key = document.getElementById('editor-world-select').value;
             const stages = STORIES[key].stages;
 
-            // Save current before modifying array
             stages.forEach((st, i) => {
                 const t = document.getElementById(`edit-title-${i}`);
                 const d = document.getElementById(`edit-desc-${i}`);
@@ -1214,18 +1310,7 @@
             });
             document.getElementById('editor-modal').classList.add('hidden');
             playSound('tada');
-            showMsg("הסיפור והשלבים נשמרו בהצלחה! 📚", "green");
-            
-            if(key === selectedStoryId && gameStarted) {
-                updateTheme(STORIES[selectedStoryId], cur);
-            }
         };
-
-        document.getElementById('story-select').addEventListener('change', (e) => {
-            const len = STORIES[e.target.value].stages.length;
-            const ls = document.getElementById('levels-select');
-            ls.options[0].text = `לפי העלילה המלאה (${len} שלבים)`;
-        });
 
         // --- Shape Generation Functions ---
         
@@ -1333,6 +1418,51 @@
                 dividers: [], rects: [{x:0, y:0, w:w, h:h, fill: "rgba(186, 230, 253, 0.4)", labelX: w/2, labelY: h/2}], ansP: (w+h)*2, ansA: w*h
             };
         }
+        
+        function genTriangle() {
+            let b = 6 + Math.floor(Math.random()*6); let h = 4 + Math.floor(Math.random()*4);
+            let hyp = Math.round(Math.sqrt(b*b + h*h));
+            return {
+                points: [[0,h], [b,h], [0,0]],
+                sides: [{x:b/2, y:h, val:b, id:'b', pos:'bottom'}, {x:0, y:h/2, val:h, id:'h', pos:'left'}, {x:b/2, y:h/2, val:hyp, id:'hyp', pos:'top'}],
+                dividers: [], rects: [], ansP: b+h+hyp, ansA: Math.round((b*h)/2)
+            };
+        }
+
+        function genParallelogram() {
+            let b = 6 + Math.floor(Math.random()*5); let h = 4 + Math.floor(Math.random()*4); let offset = 2 + Math.floor(Math.random()*3);
+            let hyp = Math.round(Math.sqrt(offset*offset + h*h));
+            return {
+                points: [[offset, 0], [offset+b, 0], [b, h], [0, h]],
+                sides: [{x:offset+b/2, y:0, val:b, id:'t', pos:'top'}, {x:offset/2+b, y:h/2, val:hyp, id:'r', pos:'right'}, {x:b/2, y:h, val:b, id:'b', pos:'bottom'}, {x:offset/2, y:h/2, val:hyp, id:'l', pos:'left'}],
+                dividers: [], rects: [], ansP: (b+hyp)*2, ansA: b*h
+            };
+        }
+
+        function genTrapezoid() {
+            let t = 4 + Math.floor(Math.random()*4); let h = 4 + Math.floor(Math.random()*4);
+            let off1 = 2 + Math.floor(Math.random()*3); let off2 = 2 + Math.floor(Math.random()*3);
+            if ((t + off1 + t + off2) % 2 !== 0) off2 += 1;
+            let b = off1 + t + off2;
+            let hyp1 = Math.round(Math.sqrt(off1*off1 + h*h));
+            let hyp2 = Math.round(Math.sqrt(off2*off2 + h*h));
+            return {
+                points: [[off1, 0], [off1+t, 0], [b, h], [0, h]],
+                sides: [{x:off1+t/2, y:0, val:t, id:'t', pos:'top'}, {x:off1+t+off2/2, y:h/2, val:hyp2, id:'r', pos:'right'}, {x:b/2, y:h, val:b, id:'b', pos:'bottom'}, {x:off1/2, y:h/2, val:hyp1, id:'l', pos:'left'}],
+                dividers: [], rects: [], ansP: t+b+hyp1+hyp2, ansA: Math.round(((t+b)*h)/2)
+            };
+        }
+
+        function genRhombus() {
+            let d1 = 6 + Math.floor(Math.random()*4)*2; 
+            let d2 = 6 + Math.floor(Math.random()*4)*2; 
+            let side = Math.round(Math.sqrt((d1/2)*(d1/2) + (d2/2)*(d2/2)));
+            return {
+                points: [[d1/2, 0], [d1, d2/2], [d1/2, d2], [0, d2/2]],
+                sides: [{x:d1*0.75, y:d2*0.25, val:side, id:'t', pos:'top'}, {x:d1*0.75, y:d2*0.75, val:side, id:'r', pos:'right'}, {x:d1*0.25, y:d2*0.75, val:side, id:'b', pos:'bottom'}, {x:d1*0.25, y:d2*0.25, val:side, id:'l', pos:'left'}],
+                dividers: [], rects: [], ansP: side*4, ansA: (d1*d2)/2
+            };
+        }
 
         // --- Setup Game ---
         document.getElementById('start-game-btn').onclick = () => {
@@ -1341,24 +1471,25 @@
             if(name) playerName = name;
             
             selectedStoryId = document.getElementById('story-select').value;
-            const lvlsVal = document.getElementById('levels-select').value;
-            if(lvlsVal === 'auto') {
-                MAX_LEVELS = STORIES[selectedStoryId].stages.length;
-            } else {
-                MAX_LEVELS = parseInt(lvlsVal);
-            }
+            MAX_LEVELS = parseInt(document.getElementById('levels-select').value) || 3;
             
             AVAILABLE_GENERATORS = [];
             if(document.getElementById('chk-comp').checked) AVAILABLE_GENERATORS.push(genLShape, genStairShape, genUShape, genArea67Shape); 
             if(document.getElementById('chk-simple').checked) AVAILABLE_GENERATORS.push(genSimpleRect);
+            if(document.getElementById('chk-triangles').checked) AVAILABLE_GENERATORS.push(genTriangle);
+            if(document.getElementById('chk-quads').checked) AVAILABLE_GENERATORS.push(genParallelogram, genTrapezoid, genRhombus);
             
             if(AVAILABLE_GENERATORS.length === 0) AVAILABLE_GENERATORS.push(genLShape);
+
+            // SHUFFLE the generators so we actually get variety right away, instead of always L shape first!
+            AVAILABLE_GENERATORS.sort(() => Math.random() - 0.5);
 
             const pNameDisp = document.getElementById('player-name-display');
             if (pNameDisp) pNameDisp.textContent = playerName;
             
             document.querySelectorAll('.player-name-text').forEach(e => e.textContent = playerName);
             document.getElementById('welcome-modal').classList.add('hidden');
+            document.getElementById('close-welcome-btn').classList.remove('hidden');
             document.getElementById('scratchpad').classList.remove('hidden');
             
             gameStarted = true; cur = 0; levelsCache = []; coins = 0;
@@ -1386,8 +1517,7 @@
                 l.grid = grid; 
                 l.offX = (SVG_W - maxX*grid)/2; 
                 
-                // Lifted shape significantly (-60) but ensured it doesn't clip top edge
-                l.offY = Math.max(30, (SVG_H - maxY*grid)/2 - 60); 
+                l.offY = (SVG_H - maxY*grid)/2; // PERFECTLY CENTERED!
                 levelsCache[index] = l;
             }
             return levelsCache[index];
@@ -1404,6 +1534,8 @@
             }
             
             document.querySelectorAll('.add-helper').forEach(e => e.remove());
+            document.querySelectorAll('.area-label-container').forEach(e => e.remove());
+            
             activeDivId = null;
             isWalking = false;
             walkStepResolver = null;
@@ -1439,11 +1571,20 @@
                 areaPanel.classList.add('hidden');
             } else {
                 areaPanel.classList.remove('hidden');
-                document.getElementById('a-inputs').innerHTML = '<div class="text-indigo-800 bg-indigo-50 border-2 border-dashed border-indigo-300 p-4 rounded-xl text-center font-black animate-pulse transition-all shadow-sm">✂️ לחצו על אחד מהקווים הכתומים המקווקווים כדי לחלק את הצורה!</div>';
-                document.getElementById('composite-final-area').classList.add('hidden');
-                if(level.dividers.length === 0) { 
-                    document.getElementById('a-inputs').innerHTML = '';
-                    selectDivider({id: 'dummy', rects: level.rects, lines: []});
+                if (level.dividers.length === 0 && level.rects.length === 0) {
+                    document.getElementById('a-inputs').innerHTML = `
+                        <div class="text-emerald-800 bg-emerald-50 border-2 border-emerald-300 p-4 rounded-xl text-center font-bold shadow-sm mb-2">
+                            לצורה הזו יש נוסחת שטח ישירה! זוכרים אותה מהדף נוסחאות?
+                        </div>
+                    `;
+                    document.getElementById('composite-final-area').classList.remove('hidden');
+                } else {
+                    document.getElementById('a-inputs').innerHTML = '<div class="text-indigo-800 bg-indigo-50 border-2 border-dashed border-indigo-300 p-4 rounded-xl text-center font-black animate-pulse transition-all shadow-sm">✂️ לחצו על אחד מהקווים הכתומים המקווקווים כדי לחלק את הצורה!</div>';
+                    document.getElementById('composite-final-area').classList.add('hidden');
+                    if(level.dividers.length === 0) { 
+                        document.getElementById('a-inputs').innerHTML = '';
+                        selectDivider({id: 'dummy', rects: level.rects, lines: []});
+                    }
                 }
             }
 
@@ -1477,21 +1618,23 @@
             const rectGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
             rectGroup.setAttribute("id", "area-rects-group");
             svg.appendChild(rectGroup);
+            
+            const highlightGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            highlightGroup.setAttribute("id", "walk-highlight-group");
+            svg.appendChild(highlightGroup);
 
             if(level.dividers) {
                 level.dividers.forEach(div => {
                     div.lines.forEach(l => {
-                        // Visual thin dashed line
                         const visLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
                         visLine.setAttribute('x1', level.offX + l.x1*level.grid); 
                         visLine.setAttribute('y1', level.offY + l.y1*level.grid);
                         visLine.setAttribute('x2', level.offX + l.x2*level.grid); 
                         visLine.setAttribute('y2', level.offY + l.y2*level.grid);
                         visLine.setAttribute('class', `divider-line div-${div.id}`);
-                        visLine.style.pointerEvents = 'none'; // Don't catch clicks on the thin line
+                        visLine.style.pointerEvents = 'none'; 
                         svg.appendChild(visLine);
                         
-                        // Thick transparent hit area for easy clicking
                         const hitLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
                         hitLine.setAttribute('x1', level.offX + l.x1*level.grid); 
                         hitLine.setAttribute('y1', level.offY + l.y1*level.grid);
@@ -1529,7 +1672,7 @@
                 let svgX = level.offX + s.x*level.grid;
                 let svgY = level.offY + s.y*level.grid;
                 
-                let padding = (s.type === 'missing') ? 35 : -25;
+                let padding = (s.type === 'missing') ? 30 : -25;
                 
                 if(s.pos === 'top') svgY -= padding;
                 if(s.pos === 'bottom') svgY += padding;
@@ -1686,6 +1829,7 @@
             playSound('step');
             const side = sideObj;
             const level = getLevel(cur);
+            const world = STORIES[selectedStoryId]; // Get world for the correct Wand Icon
             
             const detected = getParallelParts(side, level);
             let partsArr = detected ? detected.parts : [];
@@ -1718,7 +1862,7 @@
             else if(relX < 0.2) posClass = 'helper-right';
             else if(relX > 0.8) posClass = 'helper-left';
             
-            helper.className = `add-helper flex flex-col gap-3 ${posClass}`;
+            helper.className = `add-helper flex flex-col gap-2 ${posClass}`;
             helper.dir = 'ltr'; 
             
             let hintRevealed = false;
@@ -1731,7 +1875,7 @@
                 helper.appendChild(closeX);
 
                 const eqRow = document.createElement('div');
-                eqRow.className = 'flex items-center gap-2';
+                eqRow.className = 'flex items-center gap-1';
 
                 partsArr.forEach((pid, i) => {
                     const ps = level.sides.find(x => x.id === pid);
@@ -1740,7 +1884,7 @@
 
                     const box = document.createElement('div');
                     if (isRevealed) {
-                        box.className = 'w-14 h-14 flex items-center justify-center bg-green-100 border-2 border-green-500 rounded-xl shadow-sm text-green-800 font-black text-2xl cursor-default';
+                        box.className = 'eq-box-small bg-green-100 border-2 border-green-500 text-green-800';
                         box.innerHTML = `<span>${actualVal}</span>`;
                         
                         if(hintRevealed && ps && !ps.type) {
@@ -1751,21 +1895,21 @@
                             }
                         }
                     } else {
-                        box.className = 'w-14 h-14 flex items-center justify-center bg-slate-50 border-2 border-dashed border-slate-400 rounded-xl shadow-sm text-slate-400 font-black text-2xl cursor-default';
+                        box.className = 'eq-box-small bg-slate-50 border-2 border-dashed border-slate-400 text-slate-400';
                         box.innerHTML = `<span>?</span>`;
                     }
                     eqRow.appendChild(box);
                     
                     if(i < partsArr.length - 1) {
                         const opSpan = document.createElement('span'); 
-                        opSpan.className = 'font-black text-3xl text-slate-500 px-1'; 
+                        opSpan.className = 'font-black text-xl text-slate-500 px-1'; 
                         opSpan.textContent = Array.isArray(opStr) ? opStr[i] : opStr;
                         eqRow.appendChild(opSpan);
                     }
                 });
 
                 const eqSpan = document.createElement('span'); 
-                eqSpan.className = 'font-black text-3xl text-blue-600 px-1'; 
+                eqSpan.className = 'font-black text-xl text-blue-600 px-1'; 
                 eqSpan.textContent = '=';
                 eqRow.appendChild(eqSpan);
 
@@ -1775,7 +1919,7 @@
                 eqRow.appendChild(total);
 
                 const vBtn = document.createElement('button');
-                vBtn.className = 'bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-xl font-black text-2xl transition btn-3d shadow-md border-blue-800 flex-shrink-0 flex items-center justify-center ml-2';
+                vBtn.className = 'bg-blue-600 hover:bg-blue-700 text-white w-10 h-10 rounded-lg font-black text-xl transition btn-3d shadow-md border-blue-800 flex-shrink-0 flex items-center justify-center ml-1';
                 vBtn.textContent = 'V';
                 vBtn.onclick = () => {
                     if(side.type === 'missing') confirmSide(helper, side, cleanupFn, el.parentElement);
@@ -1788,10 +1932,11 @@
 
                 if (!helpEnabled && !hintRevealed) {
                     const wandRow = document.createElement('div');
-                    wandRow.className = 'w-full flex justify-center mt-1 border-t-2 border-dashed border-slate-200 pt-3';
+                    wandRow.className = 'w-full flex justify-center mt-1 border-t-2 border-dashed border-slate-200 pt-2';
                     const wandBtn = document.createElement('button');
-                    wandBtn.className = 'bg-amber-100 hover:bg-amber-200 text-amber-800 border-2 border-amber-300 rounded-xl px-4 py-2 font-black text-sm flex items-center justify-center gap-2 shadow-sm transition active:scale-95';
-                    wandBtn.innerHTML = `🪄 רמז צלעות (-2 מטבעות)`;
+                    wandBtn.className = 'bg-amber-100 hover:bg-amber-200 text-amber-800 border-2 border-amber-300 rounded-lg px-3 py-1 font-black text-xs flex items-center justify-center gap-1 shadow-sm transition active:scale-95';
+                    // Use world-specific icon
+                    wandBtn.innerHTML = `רמז צלעות בעזרת ${world.wandName} (2- <svg class="w-4 h-4 inline"><use href="#icon-coin"></use></svg>) ${world.wandIcon}`;
                     wandBtn.onclick = () => {
                         if (coins >= 2) {
                             addCoins(-2);
@@ -1870,6 +2015,8 @@
             const bbox = document.getElementById('canvas-container').getBoundingClientRect();
             const px = (x) => (level.offX + x*level.grid)*(bbox.width/SVG_W);
             const py = (y) => (level.offY + y*level.grid)*(bbox.height/SVG_H);
+            const hlGroup = document.getElementById("walk-highlight-group");
+            hlGroup.innerHTML = '';
 
             if(type === 'perimeter') {
                 walker.classList.remove('hidden');
@@ -1880,14 +2027,27 @@
                 walker.style.transition = 'none';
                 walker.style.left = `${px(level.points[0][0])}px`;
                 walker.style.top = `${py(level.points[0][1])}px`;
-                bubble.innerHTML = '';
-                await new Promise(r => setTimeout(r, 100)); 
+                
+                bubble.style.bottom = '100%'; bubble.style.top = 'auto'; bubble.style.marginTop = '0'; bubble.style.marginBottom = '15px';
+                bubble.innerHTML = '<div class="text-center font-bold text-lg text-indigo-900">יוצאים לדרך!<br>מתחילים להקיף את הצורה...</div>';
+                await new Promise(r => setTimeout(r, 1500)); 
                 
                 for(let i=0; i<level.points.length; i++) {
                     const p1 = level.points[i]; 
                     const p2 = level.points[(i+1)%level.points.length];
                     const len = (level.sides[i] && level.sides[i].val) ? level.sides[i].val : Math.round(Math.sqrt(Math.pow(p1[0]-p2[0],2) + Math.pow(p1[1]-p2[1],2)));
                     
+                    // Draw red line highlight
+                    const lLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    lLine.setAttribute('x1', level.offX + p1[0]*level.grid);
+                    lLine.setAttribute('y1', level.offY + p1[1]*level.grid);
+                    lLine.setAttribute('x2', level.offX + p2[0]*level.grid);
+                    lLine.setAttribute('y2', level.offY + p2[1]*level.grid);
+                    lLine.setAttribute('stroke', '#ef4444'); 
+                    lLine.setAttribute('stroke-width', '8');
+                    lLine.setAttribute('stroke-linecap', 'round');
+                    hlGroup.appendChild(lLine);
+
                     const midX = (p1[0] + p2[0]) / 2;
                     const midY = (p1[1] + p2[1]) / 2;
                     
@@ -1905,22 +2065,26 @@
                     await new Promise(r => setTimeout(r, 600));
 
                     if (i === 0) {
-                        bubble.innerHTML = `אורך צלע ראשונה:<br><b class="text-4xl text-indigo-700">${len}</b>`;
+                        bubble.innerHTML = `<div class="text-center font-bold text-lg text-indigo-900">אורך צלע ראשונה:</div><div class="text-center text-4xl text-indigo-700 font-black mt-2">${len}</div>`;
                         sum += len;
                         await new Promise(r => setTimeout(r, 1500));
                     } else {
                         if (helpEnabled) {
-                            bubble.innerHTML = `<span dir="ltr" class="text-lg">${sum} + ${len}</span> = <b class="text-3xl">${sum+len}</b>`;
+                            bubble.innerHTML = `<div class="text-center text-indigo-900 font-bold mb-2 text-xl" dir="ltr">${sum} + ${len} = <b class="text-3xl">${sum+len}</b></div>`;
                             await new Promise(r => setTimeout(r, 1200));
                             sum += len;
                         } else {
-                            bubble.innerHTML = `<span dir="ltr" class="text-lg font-bold">${sum} + ${len}</span> = <br><div class="mt-2 flex items-center justify-center gap-1"><input type="number" id="walk-inp" class="walk-inp-style border-indigo-500" onkeydown="if(event.key==='Enter') window.checkWalkStep(${sum+len}, ${sum}, ${len})"> <button onclick="window.checkWalkStep(${sum+len}, ${sum}, ${len})" class="walk-btn-style">V</button></div>`;
+                            bubble.innerHTML = `
+                                <div class="text-center text-indigo-900 font-bold mb-2 text-xl" dir="ltr">${sum} + ${len} =</div>
+                                <div class="flex items-center justify-center gap-2">
+                                    <input type="number" id="walk-inp" class="w-16 h-10 border-2 border-indigo-500 rounded-lg text-center font-bold text-lg outline-none focus:border-indigo-700" onkeydown="if(event.key==='Enter') window.checkWalkStep(${sum+len}, ${sum}, ${len})"> 
+                                    <button onclick="window.checkWalkStep(${sum+len}, ${sum}, ${len})" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-10 px-4 rounded-lg border-b-4 border-indigo-800 active:border-b-0 active:translate-y-1">V</button>
+                                </div>`;
                             setTimeout(() => document.getElementById('walk-inp')?.focus(), 50); 
                             
                             await new Promise(resolve => { walkStepResolver = resolve; });
                             sum += len;
                             
-                            // ⏳ THE LONG PAUSE - Let the user see the ✅!
                             await new Promise(r => setTimeout(r, 1200)); 
                         }
                     }
@@ -1944,8 +2108,8 @@
                 centerX /= level.points.length; centerY /= level.points.length;
                 walker.style.left = `${px(centerX)}px`; walker.style.top = `${py(centerY)}px`;
                 bubble.style.bottom = '100%'; bubble.style.top = 'auto'; bubble.style.marginTop = '0'; bubble.style.marginBottom = '15px';
-                bubble.innerHTML = `הגענו לסוף! <br>עכשיו הקלידו את התשובה הסופית למטה.`;
-                setTimeout(() => { walker.classList.add('hidden'); isWalking = false; }, 3000);
+                bubble.innerHTML = `<div class="text-center font-bold text-lg text-indigo-900">הגענו לסוף! <br>עכשיו הקלידו את התשובה הסופית למטה.</div>`;
+                setTimeout(() => { walker.classList.add('hidden'); isWalking = false; hlGroup.innerHTML = ''; }, 3000);
             
             } else if (type === 'area') {
                 if(!activeDivId && level.dividers && level.dividers.length > 0) {
@@ -1953,12 +2117,31 @@
                     isWalking = false;
                     return showMsg("לחצו על אחד מהקווים הכתומים המקווקווים כדי לחלק את הצורה!", "red");
                 }
+                
+                if (level.dividers.length === 0 && level.rects.length === 0) {
+                     playSound('error');
+                     isWalking = false;
+                     return showMsg("הצורה הזו לא זקוקה לחלוקה. פשוט היעזרו בנוסחה המתאימה מדף הנוסחאות!", "green");
+                }
+
                 walker.classList.remove('hidden');
                 const list = (level.dividers && level.dividers.length > 0) ? level.dividers.find(d=>d.id === activeDivId).rects : level.rects;
                 
                 for(let i=0; i<list.length; i++) {
                     playSound('step');
                     const r = list[i];
+                    
+                    // Highlight the w and h lines for Area Walk
+                    const hw = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    hw.setAttribute('x1', level.offX + r.x*level.grid); hw.setAttribute('y1', level.offY + r.y*level.grid);
+                    hw.setAttribute('x2', level.offX + (r.x+r.w)*level.grid); hw.setAttribute('y2', level.offY + r.y*level.grid);
+                    hw.setAttribute('stroke', '#ef4444'); hw.setAttribute('stroke-width', '8');
+                    const hh = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    hh.setAttribute('x1', level.offX + (r.x+r.w)*level.grid); hh.setAttribute('y1', level.offY + r.y*level.grid);
+                    hh.setAttribute('x2', level.offX + (r.x+r.w)*level.grid); hh.setAttribute('y2', level.offY + (r.y+r.h)*level.grid);
+                    hh.setAttribute('stroke', '#3b82f6'); hh.setAttribute('stroke-width', '8');
+                    hlGroup.innerHTML = ''; hlGroup.appendChild(hw); hlGroup.appendChild(hh);
+
                     walker.style.transition = 'left 0.8s ease-in-out, top 0.8s ease-in-out';
                     walker.style.left = `${px(r.labelX)}px`; walker.style.top = `${py(r.labelY)}px`;
                     
@@ -1968,29 +2151,29 @@
                         bubble.style.bottom = '100%'; bubble.style.top = 'auto'; bubble.style.marginTop = '0'; bubble.style.marginBottom = '15px';
                     }
                     
-                    await new Promise(r => setTimeout(r, 800)); 
+                    await new Promise(res => setTimeout(res, 800)); 
                     
                     if (helpEnabled) {
-                        bubble.innerHTML = `מלבן ${i+1}:<br><div class="flex items-center gap-1 justify-center mt-2" dir="ltr"><span class="font-black text-xl text-emerald-800">${r.w} × ${r.h} = </span><input type="number" id="walk-area-inp" class="walk-inp-style border-emerald-500 w-16" onkeydown="if(event.key==='Enter') window.checkWalkAreaStepFull(${r.w*r.h}, ${i})"> <button onclick="window.checkWalkAreaStepFull(${r.w*r.h}, ${i})" class="walk-btn-style bg-emerald-500 border-emerald-800">V</button></div>`;
+                        bubble.innerHTML = `<div class="text-center font-bold text-lg text-emerald-900 mb-1">מלבן ${i+1}:</div><div class="flex items-center gap-2 justify-center" dir="ltr"><span class="font-black text-xl text-emerald-800"><span class="text-red-600">${r.w}</span> × <span class="text-blue-600">${r.h}</span> = </span><input type="number" id="walk-area-inp" class="w-16 h-10 border-2 border-emerald-500 rounded-lg text-center font-bold text-lg outline-none" onkeydown="if(event.key==='Enter') window.checkWalkAreaStepFull(${r.w*r.h}, ${i})"> <button onclick="window.checkWalkAreaStepFull(${r.w*r.h}, ${i})" class="bg-emerald-500 text-white font-bold h-10 px-4 rounded-lg border-b-4 border-emerald-800">V</button></div>`;
                     } else {
-                        bubble.innerHTML = `מלבן ${i+1}:<br><div class="flex items-center gap-2 justify-center mt-2" dir="ltr"><span class="font-black text-xl text-emerald-800">${r.w} × ${r.h} = </span> <input type="number" id="walk-area-inp" class="walk-inp-style border-emerald-500 w-16" placeholder="?" onkeydown="if(event.key==='Enter') window.checkWalkAreaStepFull(${r.w*r.h}, ${i})"> <button onclick="window.checkWalkAreaStepFull(${r.w*r.h}, ${i})" class="walk-btn-style bg-emerald-500 border-emerald-800 px-3">V</button></div>`;
+                        bubble.innerHTML = `<div class="text-center font-bold text-lg text-emerald-900 mb-1">מלבן ${i+1}:</div><div class="flex items-center gap-2 justify-center" dir="ltr"><span class="font-black text-xl text-emerald-800"><span class="text-red-600">${r.w}</span> × <span class="text-blue-600">${r.h}</span> = </span> <input type="number" id="walk-area-inp" class="w-16 h-10 border-2 border-emerald-500 rounded-lg text-center font-bold text-lg outline-none" placeholder="?" onkeydown="if(event.key==='Enter') window.checkWalkAreaStepFull(${r.w*r.h}, ${i})"> <button onclick="window.checkWalkAreaStepFull(${r.w*r.h}, ${i})" class="bg-emerald-500 text-white font-bold h-10 px-4 rounded-lg border-b-4 border-emerald-800">V</button></div>`;
                     }
                     
                     setTimeout(() => document.getElementById('walk-area-inp')?.focus(), 50);
                     
                     await new Promise(resolve => { walkStepResolver = resolve; });
                     
-                    // ⏳ THE LONG PAUSE - Let the user see the ✅!
-                    await new Promise(r => setTimeout(r, 1200)); 
+                    await new Promise(res => setTimeout(res, 1200)); 
                 }
                 
                 playSound('success');
+                hlGroup.innerHTML = '';
                 let cx = 0, cy = 0;
                 level.points.forEach(p => { cx += p[0]; cy += p[1]; });
                 cx /= level.points.length; cy /= level.points.length;
                 walker.style.left = `${px(cx)}px`; walker.style.top = `${py(cy)}px`;
                 bubble.style.bottom = '100%'; bubble.style.top = 'auto'; bubble.style.marginTop = '0'; bubble.style.marginBottom = '15px';
-                bubble.innerHTML = `מעולה! עכשיו חברו הכל<br>והקלידו את השטח הכולל למטה.`;
+                bubble.innerHTML = `<div class="text-center font-bold text-lg text-emerald-900">מעולה! עכשיו חברו הכל<br>והקלידו את השטח הכולל למטה.</div>`;
                 setTimeout(() => { walker.classList.add('hidden'); isWalking = false; }, 3000);
             }
         }
@@ -2003,7 +2186,6 @@
                 addCoins(5);
                 gameStats.perimeterWalk.right++;
                 
-                // Show completed equation securely!
                 inp.parentElement.innerHTML = `<span dir="ltr" class="text-xl">${oldSum} + ${len}</span> = <b class="text-green-600 text-3xl mx-2">${correctSum}</b> <span class="text-green-500 text-2xl drop-shadow-sm">✅</span>`;
                 
                 if(walkStepResolver) { let res = walkStepResolver; walkStepResolver = null; res(); }
@@ -2025,7 +2207,6 @@
                 playSound('success'); addCoins(15);
                 gameStats.areaWalk.right++;
                 
-                // Show completed equation!
                 aInp.parentElement.innerHTML = `<span class="text-green-600 font-black text-3xl mx-2">${correctArea}</span> <span class="text-green-500 text-2xl drop-shadow-sm">✅</span>`;
                 
                 const subInput = document.getElementById(`sub-${rectIndex}`);
@@ -2037,7 +2218,7 @@
                 const container = document.getElementById(`area-calc-container-${rectIndex}`);
                 if(container) {
                     container.innerHTML = `
-                        <div class="bg-green-100 border-2 border-green-500 text-green-800 font-black px-4 py-1.5 rounded-full shadow-sm text-sm flex items-center gap-2 cursor-default transition-all transform hover:scale-105">
+                        <div class="bg-green-100 border-2 border-green-500 text-green-800 font-black px-4 py-1.5 rounded-full shadow-sm text-sm flex items-center gap-2 cursor-default transition-all transform hover:scale-105 pointer-events-auto mt-2">
                             <span dir="ltr">שטח: ${correctArea}</span>
                             <span>✅</span>
                         </div>
@@ -2053,30 +2234,49 @@
             }
         };
 
-        window.useAreaWand = (i, w, h) => {
+        window.useAreaWand = (i, w, h, rx, ry) => {
             if(coins >= 5) {
                 addCoins(-5);
                 playSound('success');
-                openInlineArea(i, w, h, true);
+                openInlineArea(i, w, h, rx, ry, true);
             } else {
                 showMsg('אין מספיק מטבעות לקסם שטח! (עולה 5)', 'red');
                 playSound('error');
             }
         };
 
-        window.closeInlineArea = (i, w, h) => {
+        window.closeInlineArea = (i, w, h, rx, ry) => {
             playSound('step');
+            const hlGroup = document.getElementById("walk-highlight-group");
+            if(hlGroup) hlGroup.innerHTML = '';
+
             const container = document.getElementById(`area-calc-container-${i}`);
             if (!container) return;
             container.innerHTML = `
-                <button onclick="openInlineArea(${i}, ${w}, ${h})" class="area-start-btn bg-white/95 hover:bg-emerald-50 text-emerald-800 font-bold py-1 px-4 rounded-full shadow-md border-2 border-emerald-400 text-sm flex items-center gap-2 transition-transform transform hover:scale-105">
+                <button onclick="openInlineArea(${i}, ${w}, ${h}, ${rx}, ${ry})" class="area-start-btn bg-white/95 hover:bg-emerald-50 text-emerald-800 font-bold py-1 px-4 rounded-full shadow-md border-2 border-emerald-400 text-sm flex items-center gap-2 transition-transform transform hover:scale-105 pointer-events-auto mt-2">
                     <span>🔍</span> שטח מלבן ${i+1}
                 </button>
             `;
         };
 
-        window.openInlineArea = (i, w, h, useWand = false) => {
+        window.openInlineArea = (i, w, h, rx, ry, useWand = false) => {
             playSound('step');
+            
+            const level = getLevel(cur);
+            const hlGroup = document.getElementById("walk-highlight-group");
+            if(hlGroup) {
+                hlGroup.innerHTML = '';
+                const hw = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                hw.setAttribute('x1', level.offX + rx*level.grid); hw.setAttribute('y1', level.offY + ry*level.grid);
+                hw.setAttribute('x2', level.offX + (rx+w)*level.grid); hw.setAttribute('y2', level.offY + ry*level.grid);
+                hw.setAttribute('stroke', '#ef4444'); hw.setAttribute('stroke-width', '8');
+                const hh = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                hh.setAttribute('x1', level.offX + (rx+w)*level.grid); hh.setAttribute('y1', level.offY + ry*level.grid);
+                hh.setAttribute('x2', level.offX + (rx+w)*level.grid); hh.setAttribute('y2', level.offY + (ry+h)*level.grid);
+                hh.setAttribute('stroke', '#3b82f6'); hh.setAttribute('stroke-width', '8');
+                hlGroup.appendChild(hw); hlGroup.appendChild(hh);
+            }
+
             const container = document.getElementById(`area-calc-container-${i}`);
             if (!container) return;
             
@@ -2084,11 +2284,11 @@
             let readonlyAttr = useWand ? 'readonly' : '';
 
             container.innerHTML = `
-                <div class="flex items-center justify-center gap-3 bg-white/95 backdrop-blur rounded-xl border-2 border-emerald-500 pl-2 pr-3 py-1.5 shadow-xl w-max relative mt-1">
-                    <button onclick="closeInlineArea(${i}, ${w}, ${h})" class="absolute -top-3 -left-3 bg-rose-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-black border-2 border-white shadow-md hover:bg-rose-600 transition z-50">✕</button>
+                <div class="flex items-center justify-center gap-2 bg-white/95 backdrop-blur rounded-xl border-2 border-emerald-500 pl-2 pr-3 py-1.5 shadow-xl w-max relative mt-2 pointer-events-auto">
+                    <button onclick="closeInlineArea(${i}, ${w}, ${h}, ${rx}, ${ry})" class="absolute -top-3 -left-3 bg-rose-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-black border-2 border-white shadow-md hover:bg-rose-600 transition z-50">✕</button>
                     
                     <div class="flex items-center gap-2 font-black" dir="ltr">
-                        <span class="text-emerald-900 text-lg">${w} × ${h} =</span>
+                        <span class="text-emerald-900 text-lg"><span class="text-red-600">${w}</span> × <span class="text-blue-600">${h}</span> =</span>
                         <input type="number" id="shape-area-inp-${i}" class="w-16 h-8 text-center text-emerald-700 text-xl outline-none bg-emerald-50 rounded-lg border-2 border-emerald-200 focus:bg-white focus:border-emerald-500 transition-colors" placeholder="?" value="${areaVal}" ${readonlyAttr} onkeydown="if(event.key==='Enter') checkInlineAreaFull(${i}, ${w}, ${h}, ${w*h})">
                     </div>
                     
@@ -2114,10 +2314,13 @@
                 addCoins(15);
                 gameStats.areaWalk.right++;
                 
+                const hlGroup = document.getElementById("walk-highlight-group");
+                if(hlGroup) hlGroup.innerHTML = '';
+
                 const container = document.getElementById(`area-calc-container-${rectIndex}`);
                 if(container) {
                     container.innerHTML = `
-                        <div class="bg-green-100 border-2 border-green-500 text-green-800 font-black px-4 py-1.5 rounded-full shadow-sm text-sm flex items-center gap-2 cursor-default transition-all transform hover:scale-105 mt-1">
+                        <div class="bg-green-100 border-2 border-green-500 text-green-800 font-black px-4 py-1.5 rounded-full shadow-sm text-sm flex items-center gap-2 cursor-default transition-all transform hover:scale-105 pointer-events-auto mt-2">
                             <span dir="ltr">${correctW} × ${correctH} = ${correctArea}</span>
                             <span>✅</span>
                         </div>
@@ -2152,9 +2355,14 @@
             });
 
             const level = getLevel(cur);
+            const world = STORIES[selectedStoryId];
             const rectGroup = document.getElementById('area-rects-group');
+            const overlay = document.getElementById('interactive-overlay');
+            
             if(rectGroup) {
                 rectGroup.innerHTML = '';
+                document.querySelectorAll('.area-label-container').forEach(e => e.remove());
+                
                 if(div.rects) {
                     div.rects.forEach((r, i) => {
                         const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -2167,28 +2375,29 @@
                         rectGroup.appendChild(rect);
 
                         if(r.labelX && r.labelY) {
-                            // Unified container for Label + Button to fix gap spacing!
-                            const foContainer = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
-                            foContainer.setAttribute('x', level.offX + r.labelX*level.grid - 150);
-                            foContainer.setAttribute('y', level.offY + r.labelY*level.grid - 55);
-                            foContainer.setAttribute('width', '300');
-                            foContainer.setAttribute('height', '140');
-                            foContainer.style.overflow = 'visible';
+                            const bbox = document.getElementById('canvas-container').getBoundingClientRect();
+                            const adiv = document.createElement('div');
+                            adiv.className = 'area-label-container absolute flex flex-col items-center justify-center gap-1';
+                            adiv.style.transform = 'translate(-50%, -50%)';
+                            adiv.style.zIndex = '30';
                             
-                            foContainer.innerHTML = `
-                                <div class="flex flex-col items-center justify-center w-full h-full gap-0.5">
-                                    <div class="flex items-center justify-center gap-2 text-[#1e3a8a] font-black text-lg bg-white/70 px-3 py-0.5 rounded-full shadow-sm" dir="rtl">
-                                        <span>מלבן ${i+1}</span>
-                                        <button onclick="useAreaWand(${i}, ${r.w}, ${r.h})" class="bg-amber-100 hover:bg-amber-200 text-amber-600 rounded-full w-7 h-7 flex items-center justify-center border-2 border-amber-300 shadow-sm text-sm transition-transform active:scale-90" title="קסם גילוי שטח (-5 מטבעות)">🪄</button>
-                                    </div>
-                                    <div id="area-calc-container-${i}" class="flex flex-col items-center justify-start w-full">
-                                        <button onclick="openInlineArea(${i}, ${r.w}, ${r.h})" class="area-start-btn bg-white/95 hover:bg-emerald-50 text-emerald-800 font-bold py-1 px-4 rounded-full shadow-md border-2 border-emerald-400 text-sm flex items-center gap-2 transition-transform transform hover:scale-105">
-                                            <span>🔍</span> שטח מלבן ${i+1}
-                                        </button>
-                                    </div>
+                            let svgX = level.offX + r.labelX*level.grid;
+                            let svgY = level.offY + r.labelY*level.grid;
+                            adiv.style.left = `${svgX * (bbox.width/SVG_W)}px`;
+                            adiv.style.top = `${svgY * (bbox.height/SVG_H)}px`;
+                            
+                            adiv.innerHTML = `
+                                <div class="flex items-center justify-center gap-2 text-[#1e3a8a] font-black text-lg bg-white/90 px-3 py-1 rounded-full shadow-md border border-blue-200 pointer-events-auto" dir="rtl">
+                                    <span>מלבן ${i+1}</span>
+                                    <button onclick="useAreaWand(${i}, ${r.w}, ${r.h}, ${r.x}, ${r.y})" class="bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-full w-8 h-8 flex items-center justify-center border-2 border-amber-300 shadow-sm text-base transition-transform active:scale-90" title="קסם שטח בעזרת ${world.wandName} (5- מטבעות)">${world.wandIcon}</button>
+                                </div>
+                                <div id="area-calc-container-${i}" class="flex flex-col items-center justify-start w-full">
+                                    <button onclick="openInlineArea(${i}, ${r.w}, ${r.h}, ${r.x}, ${r.y})" class="area-start-btn bg-white/95 hover:bg-emerald-50 text-emerald-800 font-bold py-1 px-4 rounded-full shadow-md border-2 border-emerald-400 text-sm flex items-center gap-2 transition-transform transform hover:scale-105 pointer-events-auto mt-2">
+                                        <span>🔍</span> שטח מלבן ${i+1}
+                                    </button>
                                 </div>
                             `;
-                            rectGroup.appendChild(foContainer);
+                            overlay.appendChild(adiv);
                         }
                     });
                 }
@@ -2250,13 +2459,13 @@
             const aVal = parseInt(document.getElementById('a-final').value);
             
             let pOk = (pVal === level.ansP);
-            let aOk = (level.ansA === null || aVal === level.ansA);
+            let aOk = (level.ansA === null || level.ansA === undefined || aVal === level.ansA);
 
             if(pOk && aOk) {
                 playSound('tada');
                 addCoins(50);
                 document.getElementById('status-msg').classList.add('hidden');
-                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 }, colors: ['#facc15', '#ef4444', '#3b82f6', '#10b981', '#a855f7'] });
                 document.getElementById('success-modal').classList.remove('hidden');
             } else if (!pOk && !aOk) {
                 playSound('error');
